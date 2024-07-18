@@ -1,4 +1,4 @@
-package com.vasylenko.development_team;
+package com.vasylenko.application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
