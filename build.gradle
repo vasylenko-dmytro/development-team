@@ -31,10 +31,19 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+sourceSets {
+	main {
+		resources {
+			srcDir 'src/main/resources'
+			exclude '**/*.html', '**/*.css', '**/*.js', '**/*.svg'
+		}
+	}
+}
+
 frontend {
 	nodeVersion = '21.2.0'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+tasks.withType(ProcessResources).configureEach {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
