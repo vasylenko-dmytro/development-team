@@ -15,3 +15,6 @@ build/
 !**/src/test/**/build/
 /package-lock.json
 /target/
+/.frontend-gradle-plugin/
+/node/
+/node_modules/
