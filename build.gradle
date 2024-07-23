@@ -27,7 +27,17 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+	implementation 'com.google.guava:guava:33.2.1-jre'
+	implementation 'org.flywaydb:flyway-core:10.16.0'
+	runtimeOnly 'org.postgresql:postgresql:42.7.3'
+	runtimeOnly 'org.flywaydb:flyway-database-postgresql:10.16.0'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.testcontainers:testcontainers:1.20.0'
+	testImplementation 'org.testcontainers:postgresql:1.20.0'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
@@ -46,4 +56,15 @@ frontend {
 
 tasks.withType(ProcessResources).configureEach {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+test {
+	useJUnitPlatform()
+
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
+
+	// Suppress the warning (optional)
+	jvmArgs '-Xshare:off'
 }
