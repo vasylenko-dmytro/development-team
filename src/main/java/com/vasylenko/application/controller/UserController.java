@@ -37,11 +37,10 @@ public class UserController {
   @GetMapping
   public String index(
       Model model,
-      @SortDefault.SortDefaults({
-            @SortDefault("userName.lastName"),
-            @SortDefault("userName.firstName")
-          })
-          Pageable pageable) {
+      @SortDefault.SortDefaults({@SortDefault("userName.lastName"),
+              @SortDefault("userName.firstName")
+      })
+      Pageable pageable) {
     model.addAttribute("users", service.getUsers(pageable));
     return "users/list";
   }
@@ -61,17 +60,13 @@ public class UserController {
       model.addAttribute("genders", List.of(Gender.MALE, Gender.FEMALE, Gender.OTHER));
       return "users/edit";
     }
-
     service.createUser(formData.toParameters());
-
     return "redirect:/users";
   }
 
   @GetMapping("/{id}")
-  public String editUserForm(@PathVariable("id") UserId userId,
-                             Model model) {
-    User user = service.getUser(userId)
-            .orElseThrow(() -> new UserNotFoundException(userId));
+  public String editUserForm(@PathVariable("id") UserId userId, Model model) {
+    User user = service.getUser(userId).orElseThrow(() -> new UserNotFoundException(userId));
     model.addAttribute("user", EditUserFormData.fromUser(user));
     model.addAttribute("genders", List.of(Gender.MALE, Gender.FEMALE, Gender.OTHER));
     model.addAttribute("editMode", EditMode.UPDATE);

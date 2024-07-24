@@ -26,10 +26,8 @@ public class NotExistingUserValidator implements ConstraintValidator<NotExisting
             context.buildConstraintViolationWithTemplate("{UserAlreadyExisting}")
                     .addPropertyNode("email")
                     .addConstraintViolation();
-
             return false;
         }
-
         return true;
     }
 }

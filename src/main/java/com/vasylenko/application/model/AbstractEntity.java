@@ -13,12 +13,8 @@ import java.util.Objects;
  */
 @MappedSuperclass
 public abstract class AbstractEntity<T extends EntityId<?>> implements Entity<T> {
-// ------------------------------ FIELDS ------------------------------
-
     @EmbeddedId
     private T id;
-
-// --------------------------- CONSTRUCTORS ---------------------------
 
     protected AbstractEntity() {
     }
@@ -27,14 +23,10 @@ public abstract class AbstractEntity<T extends EntityId<?>> implements Entity<T>
         this.id = Objects.requireNonNull(id, "id should not be null");
     }
 
-// --------------------- GETTER / SETTER METHODS ---------------------
-
     @Override
     public T getId() {
         return id;
     }
-
-// ------------------------ CANONICAL METHODS ------------------------
 
     /**
      * Equals implementation for entities should use the <code>id</code> only

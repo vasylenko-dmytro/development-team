@@ -9,6 +9,7 @@ import com.vasylenko.application.model.user.UserName;
 public class EditUserFormData extends CreateUserFormData {
     private String id;
     private long version;
+
     public static EditUserFormData fromUser(User user) {
         EditUserFormData result = new EditUserFormData();
         result.setId(user.getId().asString());
@@ -22,7 +23,8 @@ public class EditUserFormData extends CreateUserFormData {
         return result;
     }
     public EditUserParameters toParameters() {
-        return new EditUserParameters(version,
+        return new EditUserParameters(
+                version,
                 new UserName(getFirstName(), getLastName()),
                 getGender(),
                 getBirthday(),

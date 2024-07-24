@@ -85,7 +85,8 @@ public class CreateUserFormData {
     }
 
     public CreateUserParameters toParameters() {
-        return new CreateUserParameters(new UserName(firstName, lastName),
+        return new CreateUserParameters(
+                new UserName(firstName, lastName),
                 gender,
                 birthday,
                 new com.vasylenko.application.model.email.Email(email),

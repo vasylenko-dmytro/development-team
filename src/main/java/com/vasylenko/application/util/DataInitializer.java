@@ -13,6 +13,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
@@ -38,7 +39,7 @@ public class DataInitializer implements CommandLineRunner {
         Name name = faker.name();
         UserName userName = new UserName(name.firstName(), name.lastName());
         Gender gender = faker.bool().bool() ? Gender.MALE : Gender.FEMALE;
-        LocalDate birthday = LocalDate.ofInstant(faker.date().birthday(10, 40).toInstant(), ZoneId.systemDefault());
+        LocalDate birthday = LocalDate.ofInstant(Instant.from(faker.timeAndDate().birthday(10, 40)), ZoneId.systemDefault());
         Email email = new Email(faker.internet().emailAddress(generateEmailLocalPart(userName)));
         PhoneNumber phoneNumber = new PhoneNumber(faker.phoneNumber().phoneNumber());
         return new CreateUserParameters(userName, gender, birthday, email, phoneNumber);
