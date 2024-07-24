@@ -1,5 +1,11 @@
 package com.vasylenko.application.service;
 
-public class UserService {
+import com.vasylenko.application.model.user.CreateUserParameters;
+import com.vasylenko.application.model.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+public interface UserService {
+    User createUser(CreateUserParameters parameters);
+    Page<User> getUsers(Pageable pageable);
 }

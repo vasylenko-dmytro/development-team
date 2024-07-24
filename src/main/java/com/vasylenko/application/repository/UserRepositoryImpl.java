@@ -8,11 +8,11 @@ import java.util.UUID;
 public class UserRepositoryImpl {
     private final UniqueIdGenerator<UUID> generator;
 
-    public UserRepositoryImpl(UniqueIdGenerator<UUID> generator) { //<.>
+    public UserRepositoryImpl(UniqueIdGenerator<UUID> generator) {
         this.generator = generator;
     }
 
     public UserId nextId() {
-        return new UserId(generator.getNextUniqueId()); //<.>
+        return new UserId(generator.getNextUniqueId());
     }
 }

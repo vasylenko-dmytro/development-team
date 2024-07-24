@@ -4,7 +4,7 @@ import com.vasylenko.application.model.AbstractEntityId;
 
 import java.util.UUID;
 
-public class UserId extends AbstractEntityId<UUID> { // <.>
+public class UserId extends AbstractEntityId<UUID> {
 
     /**
      * Default constructor for JPA

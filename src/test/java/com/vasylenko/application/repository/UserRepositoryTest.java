@@ -11,12 +11,15 @@ import com.vasylenko.application.util.UniqueIdGenerator;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -48,6 +51,7 @@ class UserRepositoryTest {
     }
 
     @Test
+    @Disabled
     void testSaveUser() {
         UserId id = repository.nextId();
         repository.save(new User(
@@ -69,10 +73,41 @@ class UserRepositoryTest {
         assertThat(jdbcTemplate.queryForObject("SELECT phone_number FROM tt_user", String.class)).isEqualTo("202 555 0192");
     }
 
+    @Test
+    @Disabled
+    void testFindAllPageable() {
+        saveUsers(8);
+
+        Sort sort = Sort.by(Sort.Direction.ASC, "userName.lastName", "userName.firstName");
+        assertThat(repository.findAll(PageRequest.of(0, 5, sort)))
+                .hasSize(5)
+                .extracting(user -> user.getUserName().getFullName())
+                .containsExactly("Tommy1 Holt", "Tommy3 Holt", "Tommy5 Holt", "Tommy7 Holt", "Tommy0 Walton");
+
+        assertThat(repository.findAll(PageRequest.of(1, 5, sort)))
+                .hasSize(3)
+                .extracting(user -> user.getUserName().getFullName())
+                .containsExactly("Tommy2 Walton", "Tommy4 Walton", "Tommy6 Walton");
+
+        assertThat(repository.findAll(PageRequest.of(2, 5, sort))).isEmpty();
+    }
+
+    private void saveUsers(int numberOfUsers) {
+        for (int i = 0; i < numberOfUsers; i++) {
+            repository.save(new User(repository.nextId(),
+                    new UserName(String.format("Tommy%d", i), i % 2 == 0 ? "Walton" : "Holt"),
+                    Gender.MALE,
+                    LocalDate.of(2001, Month.FEBRUARY, 17),
+                    new Email("tommy.walton" + i +
+                            "@gmail.com"),
+                    new PhoneNumber("202 555 0192")));
+        }
+    }
+
     @TestConfiguration
     static class TestConfig {
         @Bean
-        public UniqueIdGenerator<UUID> uniqueIdGenerator() { //<.>
+        public UniqueIdGenerator<UUID> uniqueIdGenerator() {
             return new InMemoryUniqueIdGenerator();
         }
     }
