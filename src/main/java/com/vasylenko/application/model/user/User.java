@@ -1,6 +1,7 @@
 package com.vasylenko.application.model.user;
 
 import com.vasylenko.application.model.AbstractEntity;
+import com.vasylenko.application.model.AbstractVersionedEntity;
 import com.vasylenko.application.model.Gender;
 import com.vasylenko.application.model.email.Email;
 import com.vasylenko.application.model.phone.PhoneNumber;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "tt_user")
-public class User extends AbstractEntity<UserId> {
+public class User extends AbstractVersionedEntity<UserId> {
 
     @NotNull
     private UserName userName;
@@ -63,5 +64,25 @@ public class User extends AbstractEntity<UserId> {
 
     public PhoneNumber getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public void setUserName(UserName userName) {
+        this.userName = userName;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public void setEmail(Email email) {
+        this.email = email;
+    }
+
+    public void setPhoneNumber(PhoneNumber phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

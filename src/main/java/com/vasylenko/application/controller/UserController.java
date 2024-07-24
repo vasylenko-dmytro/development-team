@@ -1,9 +1,15 @@
 package com.vasylenko.application.controller;
 
+import com.vasylenko.application.exception.UserNotFoundException;
 import com.vasylenko.application.formdata.CreateUserFormData;
+import com.vasylenko.application.formdata.EditUserFormData;
 import com.vasylenko.application.model.Gender;
+import com.vasylenko.application.model.user.User;
+import com.vasylenko.application.model.user.UserId;
 import com.vasylenko.application.service.UserService;
-import com.vasylenko.application.validation.ValidationGroupSequence;
+import com.vasylenko.application.util.EditMode;
+import com.vasylenko.application.validation.CreateUserValidationGroupSequence;
+import com.vasylenko.application.validation.EditUserValidationGroupSequence;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
@@ -12,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -47,8 +54,9 @@ public class UserController {
   }
 
   @PostMapping("/create")
-  public String doCreateUser(@Validated(ValidationGroupSequence.class) @ModelAttribute("user") CreateUserFormData formData,
-                             BindingResult bindingResult, Model model) {
+  public String doCreateUser(@Validated(CreateUserValidationGroupSequence.class) @ModelAttribute("user") CreateUserFormData formData,
+                             BindingResult bindingResult,
+                             Model model) {
     if (bindingResult.hasErrors()) {
       model.addAttribute("genders", List.of(Gender.MALE, Gender.FEMALE, Gender.OTHER));
       return "users/edit";
@@ -57,5 +65,35 @@ public class UserController {
     service.createUser(formData.toParameters());
 
     return "redirect:/users";
+  }
+
+  @GetMapping("/{id}")
+  public String editUserForm(@PathVariable("id") UserId userId,
+                             Model model) {
+    User user = service.getUser(userId)
+            .orElseThrow(() -> new UserNotFoundException(userId));
+    model.addAttribute("user", EditUserFormData.fromUser(user));
+    model.addAttribute("genders", List.of(Gender.MALE, Gender.FEMALE, Gender.OTHER));
+    model.addAttribute("editMode", EditMode.UPDATE);
+    return "users/edit";
+  }
+
+  @PostMapping("/{id}")
+  public String doEditUser(@PathVariable("id") UserId userId,
+                           @Validated(EditUserValidationGroupSequence.class) @ModelAttribute("user") EditUserFormData formData,
+                           BindingResult bindingResult,
+                           Model model) {
+    if (bindingResult.hasErrors()) {
+      model.addAttribute("genders", List.of(Gender.MALE, Gender.FEMALE, Gender.OTHER));
+      model.addAttribute("editMode", EditMode.UPDATE);
+      return "users/edit";
+    }
+    service.editUser(userId, formData.toParameters());
+    return "redirect:/users";
+  }
+
+  @GetMapping("/ex")
+  public String throwException() {
+    throw new RuntimeException("This is a fake exception for testing");
   }
 }
