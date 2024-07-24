@@ -3,7 +3,7 @@ package com.vasylenko.application.util;
 import com.vasylenko.application.model.email.Email;
 import com.vasylenko.application.model.phone.PhoneNumber;
 import com.vasylenko.application.model.user.CreateUserParameters;
-import com.vasylenko.application.model.user.Gender;
+import com.vasylenko.application.model.Gender;
 import com.vasylenko.application.model.user.UserName;
 import org.apache.commons.lang3.StringUtils;
 import com.vasylenko.application.service.UserService;

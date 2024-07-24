@@ -1,6 +1,6 @@
 package com.vasylenko.application.service;
 
-import com.google.common.collect.ImmutableSet;
+import com.vasylenko.application.model.email.Email;
 import com.vasylenko.application.model.user.CreateUserParameters;
 import com.vasylenko.application.model.user.User;
 import com.vasylenko.application.model.user.UserId;
@@ -34,6 +34,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> getUsers(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    @Override
+    public boolean userWithEmailExists(Email email) {
+        return repository.existsByEmail(email);
     }
 
 }

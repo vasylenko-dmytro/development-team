@@ -1,6 +1,7 @@
 package com.vasylenko.application.model.user;
 
 import com.vasylenko.application.model.AbstractEntity;
+import com.vasylenko.application.model.Gender;
 import com.vasylenko.application.model.email.Email;
 import com.vasylenko.application.model.phone.PhoneNumber;
 import jakarta.persistence.Entity;
