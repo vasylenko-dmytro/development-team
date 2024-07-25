@@ -12,7 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 class DevelopmentTeamApplicationTests {
 
 	@Test
-	@Disabled
 	void contextLoads() {
 	}
 

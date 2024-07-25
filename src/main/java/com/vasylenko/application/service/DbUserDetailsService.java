@@ -6,6 +6,7 @@ import com.vasylenko.application.repository.UserRepository;
 import com.vasylenko.application.validation.ApplicationUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,12 +15,12 @@ import static java.lang.String.format;
 
 @Service
 @Transactional(readOnly = true)
-public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
+public class DbUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public UserDetailsService(UserRepository userRepository) {
+    public DbUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

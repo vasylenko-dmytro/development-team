@@ -37,6 +37,16 @@ public class UserController {
     this.service = service;
   }
 
+  @ModelAttribute("genders")
+  public List<Gender> genders() {
+    return List.of(Gender.MALE, Gender.FEMALE, Gender.OTHER);
+  }
+
+  @ModelAttribute("possibleRoles")
+  public List<UserRole> possibleRoles() {
+    return List.of(UserRole.values());
+  }
+
   @GetMapping
   public String index(Model model,
                       @SortDefault.SortDefaults({
@@ -50,8 +60,6 @@ public class UserController {
   @Secured("ROLE_ADMIN")
   public String createUserForm(Model model) {
     model.addAttribute("user", new CreateUserFormData());
-    model.addAttribute("genders", List.of(Gender.MALE, Gender.FEMALE, Gender.OTHER));
-    model.addAttribute("possibleRoles", List.of(UserRole.values()));    
     model.addAttribute("editMode", EditMode.CREATE);
     return "users/edit";
   }
@@ -61,8 +69,6 @@ public class UserController {
   public String doCreateUser(@Validated(CreateUserValidationGroupSequence.class) @ModelAttribute("user") CreateUserFormData formData,
                              BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
-      model.addAttribute("genders", List.of(Gender.MALE, Gender.FEMALE, Gender.OTHER));
-      model.addAttribute("possibleRoles", List.of(UserRole.values()));
       model.addAttribute("editMode", EditMode.CREATE);
       return "users/edit";
     }
@@ -74,12 +80,10 @@ public class UserController {
   public String editUserForm(@PathVariable("id") UserId userId,    
                              Model model) {
     User user = service.getUser(userId)
-            .orElseThrow(() -> new UserNotFoundException(userId));    
-    model.addAttribute("user", EditUserFormData.fromUser(user));    
-    model.addAttribute("genders", List.of(Gender.MALE, Gender.FEMALE, Gender.OTHER));
-    model.addAttribute("possibleRoles", List.of(UserRole.values()));
-    model.addAttribute("editMode", EditMode.UPDATE);    
-    return "users/edit";
+            .orElseThrow(() -> new UserNotFoundException(userId)); 
+    model.addAttribute("user", EditUserFormData.fromUser(user)); 
+    model.addAttribute("editMode", EditMode.UPDATE); 
+    return "users/edit"; 
   }
 
   @PostMapping("/{id}")
@@ -89,8 +93,6 @@ public class UserController {
                            BindingResult bindingResult,
                            Model model) {
     if (bindingResult.hasErrors()) {
-      model.addAttribute("genders", List.of(Gender.MALE, Gender.FEMALE, Gender.OTHER));
-      model.addAttribute("possibleRoles", List.of(UserRole.values()));
       model.addAttribute("editMode", EditMode.UPDATE);
       return "users/edit";
     }

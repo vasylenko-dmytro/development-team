@@ -1,6 +1,7 @@
 package com.vasylenko.application.formdata;
 
 import com.vasylenko.application.model.Gender;
+import com.vasylenko.application.model.phone.PhoneNumber;
 import com.vasylenko.application.model.user.UserRole;
 import com.vasylenko.application.validation.NotExistingUser;
 import com.vasylenko.application.validation.ValidationGroupOne;
@@ -8,16 +9,16 @@ import com.vasylenko.application.validation.ValidationGroupTwo;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
 @NotExistingUser(groups = ValidationGroupTwo.class)
 public class BaseUserFormData {
     @NotNull
-    private UserRole userRole;   
+    private UserRole userRole;
     @NotBlank
     @Size(min = 1, max = 200, groups = ValidationGroupOne.class)
     private String firstName;
@@ -32,9 +33,10 @@ public class BaseUserFormData {
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
-    @NotBlank
-    @Pattern(regexp = "[0-9.\\-() x/+]+", groups = ValidationGroupOne.class)
-    private String phoneNumber;
+    @NotNull
+    private PhoneNumber phoneNumber;
+    private MultipartFile avatarFile;
+
 
     public UserRole getUserRole() {
         return userRole;
@@ -84,11 +86,19 @@ public class BaseUserFormData {
         this.birthday = birthday;
     }
 
-    public String getPhoneNumber() {
+    public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(PhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public MultipartFile getAvatarFile() {
+        return avatarFile;
+    }
+
+    public void setAvatarFile(MultipartFile avatarFile) {
+        this.avatarFile = avatarFile;
     }
 }

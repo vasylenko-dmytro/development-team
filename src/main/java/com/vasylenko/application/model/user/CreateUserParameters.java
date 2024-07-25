@@ -4,6 +4,7 @@ import com.vasylenko.application.model.Gender;
 import com.vasylenko.application.model.email.Email;
 import com.vasylenko.application.model.phone.PhoneNumber;
 import jakarta.annotation.Nullable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -14,6 +15,7 @@ public class CreateUserParameters {
     private final LocalDate birthday;
     private final Email email;
     private final PhoneNumber phoneNumber;
+    private MultipartFile avatar;
 
     public CreateUserParameters(UserName userName,
                                 String password,
@@ -52,5 +54,14 @@ public class CreateUserParameters {
 
     public PhoneNumber getPhoneNumber() {
         return phoneNumber;
+    }
+
+    @Nullable
+    public MultipartFile getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(MultipartFile avatar) {
+        this.avatar = avatar;
     }
 }

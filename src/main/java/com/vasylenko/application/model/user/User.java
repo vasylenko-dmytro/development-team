@@ -38,6 +38,7 @@ public class User extends AbstractVersionedEntity<UserId> {
     private Email email;
     @NotNull
     private PhoneNumber phoneNumber;
+    private byte[] avatar;
 
     protected User() {
     }
@@ -126,5 +127,23 @@ public class User extends AbstractVersionedEntity<UserId> {
 
     public void setPhoneNumber(PhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    /**
+     * The avatar image of the driver. Null if no avatar has been set.
+     *
+     * @return the image bytes
+     */
+    public byte[] getAvatar() {
+        return avatar;
+    }
+
+    /**
+     * Set the avatar image of the driver.
+     *
+     * @param avatar the image bytes
+     */
+    public void setAvatar(byte[] avatar) {
+        this.avatar = avatar;
     }
 }

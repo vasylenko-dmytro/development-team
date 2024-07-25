@@ -1,6 +1,6 @@
 package com.vasylenko.application.formdata;
 
-import com.vasylenko.application.model.phone.PhoneNumber;
+import com.vasylenko.application.model.email.Email;
 import com.vasylenko.application.model.user.CreateUserParameters;
 import com.vasylenko.application.model.user.UserName;
 import com.vasylenko.application.validation.PasswordsMatch;
@@ -31,11 +31,16 @@ public class CreateUserFormData extends BaseUserFormData {
     }
 
     public CreateUserParameters toParameters() {
-        return new CreateUserParameters(new UserName(getFirstName(), getLastName()),
+        CreateUserParameters parameters = new CreateUserParameters(new UserName(getFirstName(), getLastName()),
                 password,
                 getGender(),
                 getBirthday(),
-                new com.vasylenko.application.model.email.Email(getEmail()),
-                new PhoneNumber(getPhoneNumber()));
+                new Email(getEmail()),
+                getPhoneNumber());
+
+        if (getAvatarFile() != null && !getAvatarFile().isEmpty()) {
+            parameters.setAvatar(getAvatarFile());
+        }
+        return parameters;
     }
 }

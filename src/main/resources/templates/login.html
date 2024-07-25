@@ -78,17 +78,20 @@
 
                 <div class="mt-6">
           <span class="block w-full rounded-md shadow-sm">
-            <button type="submit"
+            <button id="submit-button"
+                    type="submit"
                     class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
               Sign in
             </button>
           </span>
                 </div>
             </form>
+            <div class="text-xs mt-2 text-gray-500 text-center">
+                <span th:text="${version}"></span>
+            </div>
         </div>
     </div>
-</div>
-<script type="text/javascript" th:src="@{/webjars/alpinejs/dist/cdn.min.js}" defer></script>
-<script th:replace="~{fragments/alerts :: alert-js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/alpinejs/dist/cdn.min.js}" defer></script>
+    <script th:replace="~{fragments/alerts :: alert-js}"></script>
 </body>
 </html>

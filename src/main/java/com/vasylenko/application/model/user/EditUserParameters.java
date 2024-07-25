@@ -1,9 +1,12 @@
 package com.vasylenko.application.model.user;
 
+import com.vasylenko.application.exception.UserServiceException;
 import com.vasylenko.application.model.Gender;
 import com.vasylenko.application.model.email.Email;
 import com.vasylenko.application.model.phone.PhoneNumber;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 public class EditUserParameters extends CreateUserParameters {
@@ -24,5 +27,14 @@ public class EditUserParameters extends CreateUserParameters {
         user.setBirthday(getBirthday());
         user.setEmail(getEmail());
         user.setPhoneNumber(getPhoneNumber());
+
+        MultipartFile avatar = getAvatar();
+        if (avatar != null) {
+            try {
+                user.setAvatar(avatar.getBytes());
+            } catch (IOException e) {
+                throw new UserServiceException(e);
+            }
+        }
     }
 }
