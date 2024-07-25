@@ -30,7 +30,7 @@
 </div>
 <div th:fragment="fielderrors"
      class="rounded-md bg-red-50 p-4 mb-4"
-     th:if="${#fields.hasErrors()}"> <!--.-->
+     th:if="${#fields.hasErrors()}">
     <div class="flex">
         <div class="flex-shrink-0">
             <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -39,12 +39,12 @@
         </div>
         <div class="ml-3">
             <h3 class="text-sm font-medium text-red-800"
-                th:text="#{error.messages.summary.title(${#fields.errors().size()})}"> <!--.-->
+                th:text="#{error.messages.summary.title(${#fields.errors().size()})}">
                 There were 2 errors with your submission
             </h3>
             <div class="mt-2 text-sm text-red-700">
                 <ul class="list-disc pl-5 space-y-1">
-                    <li th:each="err,iter : ${#fields.errors()}" th:text="${err}"></li> <!--.-->
+                    <li th:each="err,iter : ${#fields.errors()}" th:text="${err}"></li>
                 </ul>
             </div>
         </div>

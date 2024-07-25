@@ -1,4 +1,5 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns:x-transition="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:fragment="menu"
      class="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
     <button type="button"
@@ -53,21 +54,34 @@
                      x-transition:leave="transition ease-in duration-75 transform"
                      x-transition:leave-start="opacity-100 scale-100"
                      x-transition:leave-end="opacity-0 scale-95">
-                    <!-- Active: "bg-gray-100", Not Active: "" -->
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
-                       id="user-menu-item-0">Your Profile</a>
+                    <!-- tag::username[] -->
+                    <div class="block px-4 py-2 text-sm text-gray-700 font-mono border-b"
+                         sec:authentication="principal.displayName"></div>
+                    <div class="block px-4 py-2 text-xs text-gray-400 font-mono border-b truncate"
+                         sec:authentication="principal.username"></div>
+                    <!-- end::username[] -->
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1"
+                       th:text="#{menu.profile}"
+                    >Your Profile</a>
 
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
-                       id="user-menu-item-1">Settings</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1"
+                       th:text="#{menu.settings}"
+                    >Settings</a>
 
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
-                       id="user-menu-item-2">Sign out</a>
+                    <!-- tag::logout[] -->
+                    <div class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" th:text="#{menu.signout}">
+                                Sign out
+                            </button>
+                        </form>
+                    </div>
+                    <!-- end::logout[] -->
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <script th:fragment="user-popup-menu-js">
     function userPopupMenu() {
         return {

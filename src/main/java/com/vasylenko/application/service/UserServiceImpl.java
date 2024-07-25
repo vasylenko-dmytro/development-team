@@ -7,28 +7,38 @@ import com.vasylenko.application.model.user.EditUserParameters;
 import com.vasylenko.application.model.user.User;
 import com.vasylenko.application.model.user.UserId;
 import com.vasylenko.application.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
-    private final UserRepository repository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    public UserServiceImpl(UserRepository repository) {
+    private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public User createUser(CreateUserParameters parameters) {
+        LOGGER.debug("Creating user {} ({})", parameters.getUserName().getFullName(), parameters.getEmail().asString());
         UserId userId = repository.nextId();
-        User user = new User(userId,
+        String encodedPassword = passwordEncoder.encode(parameters.getPassword());
+        User user = User.createUser(userId,
                 parameters.getUserName(),
+                encodedPassword,
                 parameters.getGender(),
                 parameters.getBirthday(),
                 parameters.getEmail(),
@@ -37,13 +47,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> getUsers(Pageable pageable) {
-        return repository.findAll(pageable);
-    }
-
-    @Override
-    public boolean userWithEmailExists(Email email) {
-        return repository.existsByEmail(email);
+    public User createAdministrator(CreateUserParameters parameters) {
+        LOGGER.debug("Creating administrator {} ({})", parameters.getUserName().getFullName(), parameters.getEmail().asString());
+        UserId userId = repository.nextId();
+        User user = User.createAdministrator(userId,
+                parameters.getUserName(),
+                passwordEncoder.encode(parameters.getPassword()),
+                parameters.getGender(),
+                parameters.getBirthday(),
+                parameters.getEmail(),
+                parameters.getPhoneNumber());
+        return repository.save(user);
     }
 
     @Override
@@ -53,12 +67,30 @@ public class UserServiceImpl implements UserService {
         if (parameters.getVersion() != user.getVersion()) {
             throw new ObjectOptimisticLockingFailureException(User.class, user.getId().asString());
         }
+
         parameters.update(user);
         return user;
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Page<User> getUsers(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean userWithEmailExists(Email email) {
+        return repository.existsByEmail(email);
+    }
+
+    @Override
     public Optional<User> getUser(UserId userId) {
         return repository.findById(userId);
+    }
+
+    @Override
+    public void deleteUser(UserId userId) {
+        repository.deleteById(userId);
     }
 }
