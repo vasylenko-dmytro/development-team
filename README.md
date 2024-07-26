@@ -31,8 +31,9 @@ Also used unit and integration tests to ensure proper functionality of the code 
 - [Running](#running)
 - [Testing](#testing)
 - [License](#license)
-- [Author](#author)
 - [Contributing](#contributing)
+- [Author](#author)
+
 ## Used technologies
 * Java 17
 * Gradle 8.8
@@ -52,6 +53,22 @@ The list of tools required to build and run the project:
 * npm 10.8.1
 * Node 21.2.0
 
+## Installation
+To install Tailwind as a dependency:
+```sh
+npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
+```
+_**The Light sidebar with light header**_ requires the form plugin, so we need to add it to our [package.json](package.json) file:
+```sh
+npm install -D @tailwindcss/forms@latest
+```
+
+To install Cypress as a dependency:
+```sh
+npm install cypress cypress-multi-reporters mocha mochawesome --save-dev
+```
+
+like this:
 ## Building
 To build the project, run the following command:
 ```sh
@@ -173,7 +190,7 @@ BCrypt is used to encode passwords, it is recommended to change one of them to a
 ```
 
 ### Authorization
-The project uses **Role-based authorization**.
+The project uses **Role-based authorization**.  
 The [UserRole](src/main/java/com/vasylenko/application/model/user/UserRole.java) class is used to define the roles.
 
 ## Internationalization
