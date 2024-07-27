@@ -68,7 +68,6 @@ To install Cypress as a dependency:
 npm install cypress cypress-multi-reporters mocha mochawesome --save-dev
 ```
 
-like this:
 ## Building
 To build the project, run the following command:
 ```sh

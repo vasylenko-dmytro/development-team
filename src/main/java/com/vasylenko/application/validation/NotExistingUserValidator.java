@@ -1,7 +1,7 @@
 package com.vasylenko.application.validation;
 
 import com.vasylenko.application.formdata.BaseUserFormData;
-import com.vasylenko.application.model.email.Email;
+import com.vasylenko.application.model.Email;
 import com.vasylenko.application.service.UserService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

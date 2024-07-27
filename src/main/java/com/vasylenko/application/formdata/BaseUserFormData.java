@@ -1,7 +1,7 @@
 package com.vasylenko.application.formdata;
 
 import com.vasylenko.application.model.Gender;
-import com.vasylenko.application.model.phone.PhoneNumber;
+import com.vasylenko.application.model.PhoneNumber;
 import com.vasylenko.application.model.user.UserRole;
 import com.vasylenko.application.validation.NotExistingUser;
 import com.vasylenko.application.validation.ValidationGroupOne;

@@ -1,8 +1,8 @@
 package com.vasylenko.application.service;
 
 import com.vasylenko.application.model.Gender;
-import com.vasylenko.application.model.email.Email;
-import com.vasylenko.application.model.phone.PhoneNumber;
+import com.vasylenko.application.model.Email;
+import com.vasylenko.application.model.PhoneNumber;
 import com.vasylenko.application.model.user.User;
 import com.vasylenko.application.model.user.UserId;
 import com.vasylenko.application.model.user.UserName;

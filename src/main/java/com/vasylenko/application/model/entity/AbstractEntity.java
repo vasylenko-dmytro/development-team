@@ -1,4 +1,4 @@
-package com.vasylenko.application.model;
+package com.vasylenko.application.model.entity;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.MappedSuperclass;

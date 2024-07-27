@@ -21,16 +21,12 @@
                      th:src="@{/svg/application-logo.svg}" alt="Application Logo"/>
             </div>
             <form th:action="@{/login}" method="post">
-                <!-- tag::login-error[] -->
                 <th:block th:if="${param.error}">
                     <div th:replace="~{fragments/alerts :: error(message=#{login.error},useHorizontalPadding=false)}"></div>
                 </th:block>
-                <!-- end::login-error[] -->
-                <!-- tag::logout-confirmation[] -->
                 <th:block th:if="${param.logout}">
                     <div th:replace="~{fragments/alerts :: success(message=#{login.logout.confirmation},useHorizontalPadding=false)}"></div>
                 </th:block>
-                <!-- end::logout-confirmation[] -->
                 <div>
                     <label for="username" class="block text-sm font-medium text-gray-700"
                            th:text="#{login.username}">

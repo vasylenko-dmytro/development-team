@@ -1,4 +1,4 @@
-package com.vasylenko.application.model;
+package com.vasylenko.application.model.entity;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

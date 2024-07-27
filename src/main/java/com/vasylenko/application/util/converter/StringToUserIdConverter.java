@@ -1,4 +1,4 @@
-package com.vasylenko.application.util;
+package com.vasylenko.application.util.converter;
 
 import com.vasylenko.application.model.user.UserId;
 import org.springframework.core.convert.converter.Converter;

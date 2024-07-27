@@ -1,9 +1,11 @@
-package com.vasylenko.application.model.user;
+package com.vasylenko.application.model.user.parameters;
 
 import com.vasylenko.application.exception.UserServiceException;
 import com.vasylenko.application.model.Gender;
-import com.vasylenko.application.model.email.Email;
-import com.vasylenko.application.model.phone.PhoneNumber;
+import com.vasylenko.application.model.Email;
+import com.vasylenko.application.model.PhoneNumber;
+import com.vasylenko.application.model.user.User;
+import com.vasylenko.application.model.user.UserName;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

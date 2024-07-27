@@ -1,6 +1,6 @@
 package com.vasylenko.application.repository;
 
-import com.vasylenko.application.model.email.Email;
+import com.vasylenko.application.model.Email;
 import com.vasylenko.application.model.user.User;
 import com.vasylenko.application.model.user.UserId;
 import org.springframework.data.repository.CrudRepository;

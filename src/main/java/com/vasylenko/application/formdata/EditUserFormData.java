@@ -1,7 +1,7 @@
 package com.vasylenko.application.formdata;
 
-import com.vasylenko.application.model.email.Email;
-import com.vasylenko.application.model.user.EditUserParameters;
+import com.vasylenko.application.model.Email;
+import com.vasylenko.application.model.user.parameters.EditUserParameters;
 import com.vasylenko.application.model.user.User;
 import com.vasylenko.application.model.user.UserName;
 

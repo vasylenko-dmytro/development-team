@@ -1,6 +1,6 @@
 package com.vasylenko.application.service;
 
-import com.vasylenko.application.model.email.Email;
+import com.vasylenko.application.model.Email;
 import com.vasylenko.application.model.user.User;
 import com.vasylenko.application.repository.UserRepository;
 import com.vasylenko.application.validation.ApplicationUserDetails;

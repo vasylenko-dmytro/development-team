@@ -1,18 +1,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       lang="en">
-<!-- tag::success[] -->
 <div th:fragment="success(message)"
      class="max-w-7xl mx-auto my-3"
      th:with="useHorizontalPadding=${useHorizontalPadding?:'true'}"
      th:classappend="${useHorizontalPadding?'px-4 sm:px-6 md:px-8':''}"
      x-data="messageAlert()"
      x-show="isAlertVisible()">
-    <!-- end::success[] -->
     <div class="rounded-md bg-green-50 p-4">
         <div class="flex">
             <div class="flex-shrink-0">
-                <!-- Heroicon name: solid/check-circle -->
                 <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                      fill="currentColor" aria-hidden="true">
                     <path fill-rule="evenodd"
@@ -30,7 +27,6 @@
                     <button class="inline-flex bg-green-50 rounded-md p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600"
                             @click="hideAlert">
                         <span class="sr-only">Dismiss</span>
-                        <!-- Heroicon name: solid/x -->
                         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                              aria-hidden="true">
                             <path fill-rule="evenodd"
@@ -43,7 +39,6 @@
         </div>
     </div>
 </div>
-<!-- tag::error[] -->
 <div th:fragment="error(message)"
      class="max-w-7xl mx-auto my-3"
      th:with="useHorizontalPadding=${useHorizontalPadding?:'true'}"
@@ -71,7 +66,6 @@
                     <button class="inline-flex rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:bg-red-100 transition ease-in-out duration-150"
                             @click="hideAlert">
                         <span class="sr-only">Dismiss</span>
-                        <!-- Heroicon name: solid/x -->
                         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                              aria-hidden="true">
                             <path fill-rule="evenodd"
@@ -84,7 +78,6 @@
         </div>
     </div>
 </div>
-<!-- end::error[] -->
 <script th:fragment="alert-js">
 function messageAlert() {
     return {

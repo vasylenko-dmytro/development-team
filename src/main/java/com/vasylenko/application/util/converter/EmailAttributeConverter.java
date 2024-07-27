@@ -1,5 +1,6 @@
-package com.vasylenko.application.model.email;
+package com.vasylenko.application.util.converter;
 
+import com.vasylenko.application.model.Email;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

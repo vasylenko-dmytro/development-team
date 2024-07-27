@@ -1,7 +1,7 @@
 package com.vasylenko.application.formdata;
 
-import com.vasylenko.application.model.email.Email;
-import com.vasylenko.application.model.user.CreateUserParameters;
+import com.vasylenko.application.model.Email;
+import com.vasylenko.application.model.user.parameters.CreateUserParameters;
 import com.vasylenko.application.model.user.UserName;
 import com.vasylenko.application.validation.PasswordsMatch;
 import com.vasylenko.application.validation.ValidationGroupTwo;

@@ -54,12 +54,10 @@
                      x-transition:leave="transition ease-in duration-75 transform"
                      x-transition:leave-start="opacity-100 scale-100"
                      x-transition:leave-end="opacity-0 scale-95">
-                    <!-- tag::username[] -->
                     <div class="block px-4 py-2 text-sm text-gray-700 font-mono border-b"
                          sec:authentication="principal.displayName"></div>
                     <div class="block px-4 py-2 text-xs text-gray-400 font-mono border-b truncate"
                          sec:authentication="principal.username"></div>
-                    <!-- end::username[] -->
                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1"
                        th:text="#{menu.profile}"
                     >Your Profile</a>
@@ -68,7 +66,6 @@
                        th:text="#{menu.settings}"
                     >Settings</a>
 
-                    <!-- tag::logout[] -->
                     <div class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         <form th:action="@{/logout}" method="post">
                             <button type="submit" th:text="#{menu.signout}">
@@ -76,7 +73,6 @@
                             </button>
                         </form>
                     </div>
-                    <!-- end::logout[] -->
                 </div>
             </div>
         </div>

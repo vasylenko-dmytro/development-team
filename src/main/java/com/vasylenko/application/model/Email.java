@@ -1,4 +1,4 @@
-package com.vasylenko.application.model.email;
+package com.vasylenko.application.model;
 
 import com.google.common.base.MoreObjects;
 import org.springframework.util.Assert;

@@ -4,13 +4,10 @@
       lang="en">
 <body>
 <!--/*@thymesVar id="page" type="org.springframework.data.domain.Page"*/-->
-<!-- tag::controls[] -->
 <div th:fragment="controls"
      class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-    <!-- end::controls[] -->
 
     <!-- Mobile pagination -->
-    <!-- tag::mobile[] -->
     <div class="flex-1 flex justify-between sm:hidden">
         <a id="pagination-mobile-previous"
            th:href="${page.isFirst()}?'javascript:void(0)':${@urlBuilder.replaceQueryParam('page', page.number - 1).toUriString()}"
@@ -29,11 +26,9 @@
             Next
         </a>
     </div>
-    <!-- end::mobile[] -->
 
     <!-- Desktop pagination -->
     <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-        <!-- tag::pagination-summary[] -->
         <div>
             <p id="pagination-summary" class="text-sm leading-5 text-gray-700">
                 Showing
@@ -45,10 +40,8 @@
                 results
             </p>
         </div>
-        <!-- end::pagination-summary[] -->
         <div>
             <nav id="pagination-actions" class="relative z-0 inline-flex shadow-sm">
-                <!-- tag::pagination-previous[] -->
                 <a id="pagination-previous"
                    th:href="${page.isFirst()}?'javascript:void(0)':${@urlBuilder.replaceQueryParam('page', page.number - 1).toUriString()}"
                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border bg-white text-sm leading-5 font-medium"
@@ -61,9 +54,6 @@
                               clip-rule="evenodd"/>
                     </svg>
                 </a>
-                <!-- end::pagination-previous[] -->
-
-                <!-- tag::pagenumbers[] -->
                 <th:block
                         th:with="startPage=${T(java.lang.Math).max(1, page.getNumber() - 1)},endPage=${T(java.lang.Math).min(startPage + 4, page.getTotalPages())}">
                     <a th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}"
@@ -75,7 +65,6 @@
                         <span th:text="${pageNumber}" th:remove="tag"></span>
                     </a>
                 </th:block>
-                <!-- end::pagenumbers[] -->
 
                 <a id="pagination-next"
                    th:href="${page.isLast()}?'javascript:void(0)':${@urlBuilder.replaceQueryParam('page', page.number + 1).toUriString()}"

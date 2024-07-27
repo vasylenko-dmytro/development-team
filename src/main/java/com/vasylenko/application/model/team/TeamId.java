@@ -1,18 +1,18 @@
-package com.vasylenko.application.model.user;
+package com.vasylenko.application.model.team;
 
 import com.vasylenko.application.model.entity.AbstractEntityId;
 
 import java.util.UUID;
 
-public class UserId extends AbstractEntityId<UUID> {
+public class TeamId extends AbstractEntityId<UUID> {
 
     /**
      * Default constructor for JPA
      */
-    protected UserId() {
+    protected TeamId() {
     }
 
-    public UserId(UUID id) {
+    public TeamId(UUID id) {
         super(id);
     }
 }

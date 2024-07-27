@@ -1,5 +1,6 @@
-package com.vasylenko.application.model.phone;
+package com.vasylenko.application.util.converter;
 
+import com.vasylenko.application.model.PhoneNumber;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

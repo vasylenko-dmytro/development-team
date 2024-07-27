@@ -10,15 +10,11 @@
 </head>
 <body>
 <div layout:fragment="page-content">
-    <!-- tag::create-button[] -->
     <div th:replace="~{fragments/titles :: title-with-button(#{users.title}, 'user-add', #{users.add}, @{/users/create}, 'add-user-button')}"
          sec:authorize="hasRole('ADMIN')"></div>
-    <!-- end::create-button[] -->
-    <!-- tag::alert[] -->
     <div th:if="${deletedUserName}">
         <div th:replace="~{fragments/alerts :: success(#{user.delete.success(${deletedUserName})})}"></div>
     </div>
-    <!-- end::alert[] -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
         <div class="py-4">
             <div class="flex flex-col">
@@ -26,7 +22,6 @@
                     <div class="align-middle inline-block min-w-full shadow overflow-hidden rounded-md sm:rounded-lg border-b border-gray-200">
                         <table id="users-table" class="min-w-full">
                             <thead>
-                            <!-- tag::tr[] -->
                             <tr>
                                 <th th:replace="~{fragments/table :: header(#{user.name})}"></th>
                                 <th th:replace="~{fragments/table :: header(title=#{user.gender},hideOnMobile=true)}"></th>
@@ -37,16 +32,13 @@
                                     <th th:replace="~{fragments/table :: header('')}"></th>
                                 </th:block>
                             </tr>
-                            <!-- end::tr[] -->
                             </thead>
                             <tbody>
-                            <!-- tag::tr-body[] -->
                             <tr class="bg-white" th:each="user : ${users}">
                                 <td th:replace="~{fragments/table :: data(contents=${user.userName.fullName},primary=true)}"></td>
                                 <td th:replace="~{fragments/table :: data(contents=${user.gender},hideOnMobile=true)}"></td>
                                 <td th:replace="~{fragments/table :: data(contents=${user.birthday},hideOnMobile=true)}"></td>
                                 <td th:replace="~{fragments/table :: data(contents=${user.email.asString()},hideOnMobile=true)}"></td>
-                                <!-- tag::td-admin[] -->
                                 <th:block sec:authorize="hasRole('ADMIN')">
                                     <td th:replace="~{fragments/table :: dataWithLink(#{edit}, @{'/users/'+ ${user.id.asString()}})}"></td>
                                     <td th:x-data="|{name: '${user.userName.fullName}', deleteUrl: '/users/${user.id.asString()}/delete'}|"
@@ -56,9 +48,7 @@
                                            @click="$dispatch('open-delete-modal', {name, deleteUrl})">Delete</a>
                                     </td>
                                 </th:block>
-                                <!-- end::td-admin[] -->
                             </tr>
-                            <!-- end::tr-body[] -->
                             </tbody>
                         </table>
                         <th:block th:if="${users.content.size() > 0}">
@@ -70,7 +60,6 @@
         </div>
     </div>
 </div>
-<!-- tag::modals-content[] -->
 <div layout:fragment="modals-content" x-data="modalDeleteConfirmation()">
     <th:block th:if="${users.content.size() > 0}">
         <div x-show="isVisible()"
@@ -153,8 +142,6 @@
         </div>
     </th:block>
 </div>
-<!-- end::modals-content[] -->
-<!-- tag::modals-content-js[] -->
 <th:block layout:fragment="page-scripts">
     <script>
         function modalDeleteConfirmation() {
@@ -182,10 +169,7 @@
             };
         }
     </script>
-    <!-- tag::success-js[] -->
     <script th:replace="~{fragments/alerts :: alert-js}"></script>
-    <!-- end::success-js[] -->
 </th:block>
-<!-- end::modals-content-js[] -->
 </body>
 </html>

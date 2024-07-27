@@ -1,7 +1,7 @@
 package com.vasylenko.application.repository;
 
-import com.vasylenko.application.model.email.Email;
-import com.vasylenko.application.model.phone.PhoneNumber;
+import com.vasylenko.application.model.Email;
+import com.vasylenko.application.model.PhoneNumber;
 import com.vasylenko.application.model.Gender;
 import com.vasylenko.application.model.user.User;
 import com.vasylenko.application.model.user.UserId;
@@ -11,7 +11,6 @@ import com.vasylenko.application.util.UniqueIdGenerator;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
