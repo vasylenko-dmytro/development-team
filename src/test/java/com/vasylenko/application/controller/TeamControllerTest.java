@@ -1,6 +1,7 @@
 package com.vasylenko.application.controller;
 
 import com.vasylenko.application.config.SpringSecurityTestConfig;
+import com.vasylenko.application.service.TeamService;
 import com.vasylenko.application.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,52 +20,53 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(TeamController.class)
 @Import(SpringSecurityTestConfig.class)
-class UserControllerTest {
+class TeamControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @MockBean
+    private TeamService teamService;
+    @MockBean
     private UserService userService;
 
     @Test
-    void testGetUsersRedirectsToLoginWhenNotAuthenticated() throws Exception {
-        mockMvc.perform(get("/users"))
-                .andDo(print())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("http://localhost/login"));
+    @WithUserDetails(USERNAME_ADMIN)
+    void testIndex() throws Exception {
+        when(teamService.getTeams(any(Pageable.class))).thenReturn(Page.empty());
+        mockMvc.perform(get("/teams"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("teams/list"))
+                .andExpect(model().attributeExists("teams"));
     }
 
     @Test
     @WithUserDetails(USERNAME_USER)
-    void testGetUsersAsUser() throws Exception {
-
-        when(userService.getUsers(any(Pageable.class)))
+    void testGetTeamsAsUser() throws Exception {
+        when(teamService.getTeams(any(Pageable.class)))
                 .thenReturn(Page.empty());
-
-        mockMvc.perform(get("/users"))
+        mockMvc.perform(get("/teams"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
     @WithUserDetails(USERNAME_ADMIN)
-    void testCreateUserForm() throws Exception {
-        mockMvc.perform(get("/users/create"))
+    void testCreateTeamForm() throws Exception {
+        mockMvc.perform(get("/teams/create"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("users/edit"))
-                .andExpect(model().attributeExists("user", "editMode"));
+                .andExpect(view().name("teams/edit"))
+                .andExpect(model().attributeExists("team", "positions"));
     }
 
     @Test
     @WithUserDetails(USERNAME_USER)
-    void testOpenCreateUserFormWithoutPermission() throws Exception {
-        mockMvc.perform(get("/users/create"))
+    void testOpenCreateTeamFormWithoutPermission() throws Exception {
+        mockMvc.perform(get("/teams/create"))
                 .andExpect(status().isForbidden());
     }
 }

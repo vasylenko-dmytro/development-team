@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Set;
 
 @Entity
@@ -78,7 +79,7 @@ public class User extends AbstractVersionedEntity<UserId> {
                                            LocalDate birthday,
                                            Email email,
                                            PhoneNumber phoneNumber) {
-        return new User(id, Set.of(UserRole.USER, UserRole.ADMIN), userName, encodedPassword, gender, birthday, email, phoneNumber);
+        return new User(id, Set.of(UserRole.ADMIN), userName, encodedPassword, gender, birthday, email, phoneNumber);
     }
 
     public Set<UserRole> getRoles() {

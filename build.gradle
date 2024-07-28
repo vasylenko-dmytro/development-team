@@ -79,7 +79,6 @@ tasks.withType(ProcessResources).configureEach {
 }
 
 test {
-	enabled=false
 	useJUnitPlatform()
 
 	testLogging {
