@@ -48,8 +48,7 @@ public class TeamController {
     }
 
     @GetMapping
-    public String index(Model model,
-                        @SortDefault.SortDefaults(@SortDefault("name")) Pageable pageable) {
+    public String index(Model model, @SortDefault.SortDefaults(@SortDefault("name")) Pageable pageable) {
         model.addAttribute("teams", service.getTeams(pageable));
         return "teams/list";
     }
@@ -80,8 +79,7 @@ public class TeamController {
     }
 
     @GetMapping("/{id}")
-    public String editTeamForm(@PathVariable("id") TeamId teamId,
-                               Model model) {
+    public String editTeamForm(@PathVariable("id") TeamId teamId, Model model) {
         Team team = service.getTeamWithMembers(teamId)
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
         model.addAttribute("team", EditTeamFormData.fromTeam(team));
@@ -126,14 +124,13 @@ public class TeamController {
 
     @GetMapping("/edit-team-member")
     @Secured("ROLE_ADMIN")
-    public String getEditTeamMemberFragment(Model model,
-                                            @RequestParam("index") int index) {
+    public String getEditTeamMemberFragment(Model model, @RequestParam("index") int index) {
         model.addAttribute("index", index);
         model.addAttribute("users", userService.getAllUsersNameAndId());
         model.addAttribute("positions", TeamMemberPosition.values());
         model.addAttribute("teamObjectName", "dummyTeam");
         model.addAttribute("dummyTeam", new DummyTeamForTeamMemberFragment());
-        return "fragments/edit-team-member :: teammember-form";
+        return "teams/edit-team-member :: teammember-form";
     }
 
     private static class DummyTeamForTeamMemberFragment {

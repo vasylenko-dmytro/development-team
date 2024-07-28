@@ -10,7 +10,7 @@
 </head>
 <body>
 <div layout:fragment="page-content">
-    <div th:replace="~{fragments/titles :: title-with-button(#{teams.title}, 'user-add', #{teams.add}, @{/teams/create}, 'add-team-button')}"
+    <div th:replace="~{fragments/titles :: title-with-button(#{teams.title}, 'team-add', #{teams.add}, @{/teams/create}, 'add-team-button')}"
          sec:authorize="hasRole('ADMIN')"></div>
     <div th:if="${deletedTeamName}">
         <div th:replace="~{fragments/alerts :: success(#{team.delete.success(${deletedTeamName})})}"></div>

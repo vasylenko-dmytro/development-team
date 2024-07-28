@@ -49,7 +49,7 @@
                                 <div id="teammember-forms"
                                      th:data-teammembers-count="${team.members.length}">
                                     <th:block th:each="member, iter : ${team.members}">
-                                        <div th:replace="~{fragments/edit-team-member :: teammember-form(index=${iter.index}, teamObjectName='team')}"></div>
+                                        <div th:replace="~{teams/edit-team-member :: teammember-form(index=${iter.index}, teamObjectName='team')}"></div>
                                     </th:block>
                                 </div>
                                 <div class="mt-4">
@@ -92,7 +92,7 @@
         function addExtraTeamMemberForm() { // <.>
             const teamMemberForms = document.getElementById('teammember-forms'); // <.>
             const count = teamMemberForms.getAttribute('data-teammembers-count'); // <.>
-            fetch(`/fragments/edit-team-member?index=${count}`) // <.>
+            fetch(`/teams/edit-team-member?index=${count}`) // <.>
                 .then(response => response.text()) // <.>
                 .then(fragment => {
                     teamMemberForms.appendChild(htmlToElement(fragment)); // <.>

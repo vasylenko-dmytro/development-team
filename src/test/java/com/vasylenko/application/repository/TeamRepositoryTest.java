@@ -87,7 +87,7 @@ class TeamRepositoryTest {
     }
 
     @Test
-    void testSaveTeamWithPlayers() {
+    void testSaveTeamWithMembers() {
         User lead = userRepository.save(Users.createUser(new UserName("Lead", "1")));
         User member1 = userRepository.save(Users.createUser(new UserName("Member", "1")));
         User member2 = userRepository.save(Users.createUser(new UserName("Member", "2")));
