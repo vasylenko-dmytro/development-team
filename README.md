@@ -200,11 +200,11 @@ Use cookie or add `/?lang=es` to the URL to switch to Spanish.
 ## Running
 To run the project, use the following command:
 ```sh
-# build the project
-./gradlew build
-
 # build and copy HTML, JavaScript, CSS and SVG files
 npm run build
+
+# build the project
+./gradlew build
 
 # run the project
 ./gradlew bootRun
