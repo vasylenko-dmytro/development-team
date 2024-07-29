@@ -141,7 +141,6 @@ spring.datasource.url=jdbc:tc:postgresql:16:///xxxxxx?TC_TMPFS=/testtmpfs:rw
 spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver
 spring.datasource.username=xxxxxx
 spring.datasource.password=xxxxxx
-spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.hibernate.ddl-auto=validate
 logging.level.org.hibernate.SQL=DEBUG
 spring.jpa.properties.hibernate.show_sql=false

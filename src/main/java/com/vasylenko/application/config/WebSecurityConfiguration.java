@@ -40,6 +40,7 @@ public class WebSecurityConfiguration {
                         .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
+                        .defaultSuccessUrl("/", true)
                         .permitAll())
                 .logout(LogoutConfigurer::permitAll);
 

@@ -39,8 +39,7 @@
                                 </button>
                             </div>
                             <div class="sm:col-span-2">
-                                <label for="userRole" class="block text-sm font-medium text-gray-700">User
-                                    Role</label>
+                                <label for="userRole" class="block text-sm font-medium text-gray-700" th:text="#{user.role}">User Role</label>
                                 <select id="userRole"
                                         class="max-w-lg block focus:ring-green-500 focus:border-green-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                                         th:field="*{userRole}">
@@ -52,9 +51,7 @@
                             </div>
                             <div class="sm:col-span-6">
                                 <label class="block text-sm font-medium text-gray-700"
-                                       th:text="#{user.gender}">
-                                    Gender
-                                </label>
+                                       th:text="#{user.gender}">Gender</label>
                                 <div>
                                     <th:block th:each="possibleGender,iter : ${genders}">
                                         <input type="radio"
@@ -62,8 +59,7 @@
                                                th:field="*{gender}"
                                                th:value="${possibleGender}"
                                                class="mr-1 focus:ring-green-500 h-4 w-4 text-green-500 border-gray-300"
-                                               th:classappend="${iter.index > 0 ?'ml-4':''}"
-                                        >
+                                               th:classappend="${iter.index > 0 ?'ml-4':''}">
                                         <label th:for="${'gender-'+possibleGender}"
                                                th:text="#{'Gender.'+${possibleGender}}"
                                                class="text-sm font-medium text-gray-700">
@@ -91,18 +87,15 @@
                         <div class="flex justify-end">
       <span class="inline-flex rounded-md shadow-sm">
         <button type="button"
+                @click=redirectTo('/users')
                 class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                th:text="#{cancel}">
-          Cancel
-        </button>
+                th:text="#{cancel}">Cancel</button>
       </span>
-                            <span class="ml-3 inline-flex rounded-md shadow-sm">
+        <span class="ml-3 inline-flex rounded-md shadow-sm">
         <button id="submit-button"
                 type="submit"
                 class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                th:text="${editMode?.name() == 'UPDATE'}?#{save}:#{create}">
-          Save
-        </button>
+                th:text="${editMode?.name() == 'UPDATE'}?#{save}:#{create}">Save</button>
       </span>
                         </div>
                     </div>
@@ -112,30 +105,8 @@
     </div>
 </div>
 <th:block layout:fragment="page-scripts">
-    <script>
-        document.querySelector('#selectAvatarButton').addEventListener('click', evt => {
-            document.querySelector('#selectAvatarButton').blur();
-            document.querySelector('#avatarFile').click();
-        });
-
-        document.querySelector('#avatarImage').addEventListener('click', evt => {
-            document.querySelector('#avatarImage').blur();
-            document.querySelector('#avatarFile').click();
-        });
-
-
-        document.querySelector('#avatarFile').addEventListener('change', evt => {
-            previewImage();
-        });
-
-        function previewImage() {
-            var uploader = document.querySelector('#avatarFile');
-            if (uploader.files && uploader.files[0]) {
-                document.querySelector('#avatarImage').src = window.URL.createObjectURL(uploader.files[0]);
-                document.querySelector('#avatarImage').classList.remove('p-6');
-            }
-        }
-    </script>
+    <script th:src="@{/js/user-avatar.js}"></script>
+    <script th:src="@{/js/redirect-to.js}"></script>
 </th:block>
 </body>
 </html>

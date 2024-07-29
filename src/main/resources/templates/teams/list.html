@@ -36,13 +36,13 @@
                                 <td th:replace="~{fragments/table :: data(contents=${team.name},primary=true)}"></td>
                                 <td th:replace="~{fragments/table :: data(contents=${team.leadName.fullName},hideOnMobile=true)}"></td>
                                 <th:block sec:authorize="hasRole('ADMIN')">
-                                    <td th:replace="~{fragments/table :: dataWithLink('Edit', @{'/teams/'+ ${team.id.asString()}})}"></td>
+                                    <td th:replace="~{fragments/table :: dataWithLink(#{edit}, @{'/teams/'+ ${team.id.asString()}})}"></td>
                                     <td th:x-data="|{name: '${team.name}', deleteUrl: '/teams/${team.id.asString()}/delete'}|"
                                         class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
                                         <a href="javascript:void(0)"
                                            th:id="|delete-link-${team.id.asString()}|"
                                            class="text-green-600 hover:text-green-900"
-                                           @click="$dispatch('open-delete-modal', {name, deleteUrl})">Delete</a>
+                                           @click="$dispatch('open-delete-modal', {name, deleteUrl})" th:text="#{delete}">Delete</a>
                                     </td>
                                 </th:block>
                             </tr>
@@ -64,9 +64,7 @@
              @open-delete-modal.window="showModal($event)"
              class="fixed z-10 inset-0 overflow-y-auto">
             <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <!--
-                  Background overlay
-                -->
+                <!-- Background overlay -->
                 <div class="fixed inset-0 transition-opacity"
                      x-show="isVisible()"
                      x-transition:enter="ease-out duration-300"
@@ -80,9 +78,7 @@
 
                 <!-- This element is to trick the browser into centering the modal contents. -->
                 <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>&#8203;
-                <!--
-                  Modal panel
-                -->
+                <!-- Modal panel -->
                 <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6"
                      role="dialog" aria-modal="true" aria-labelledby="modal-headline"
                      x-show="isVisible()"
@@ -105,9 +101,9 @@
                             </h3>
                             <div class="mt-2">
                                 <p class="text-sm leading-5 text-gray-500"
-                                   id="delete-modal-message">
-                                    Are you sure you want to delete team <span class="italic"
-                                                                               x-text="getName()"></span>?
+                                   id="delete-modal-message"
+                                   th:text="#{team.delete.confirmation(${getName()})}">
+                                    Are you sure you want to delete team <span class="italic" x-text="getName()"></span>?
                                 </p>
                             </div>
                         </div>
@@ -122,15 +118,13 @@
           <button type="submit"
                   id="delete-modal-submit-button"
                   class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red transition ease-in-out duration-150 sm:text-sm sm:leading-5">
-            Delete
-          </button>
+              Delete</button>
         </span>
-                            <span class="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
+          <span class="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
           <button type="button"
                   @click="hideModal"
                   class="inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5">
-            Cancel
-          </button>
+              Cancel</button>
         </span>
                         </div>
                     </form>
@@ -140,32 +134,7 @@
     </th:block>
 </div>
 <th:block layout:fragment="page-scripts">
-    <script>
-        function modalDeleteConfirmation() {
-            return {
-                show: false,
-                name: '',
-                deleteUrl: '',
-                hideModal() {
-                    this.show = false;
-                },
-                isVisible() {
-                    return this.show === true;
-                },
-                getName() {
-                    return this.name;
-                },
-                getDeleteUrl() {
-                    return this.deleteUrl;
-                },
-                showModal($event) {
-                    this.name = $event.detail.name;
-                    this.deleteUrl = $event.detail.deleteUrl;
-                    this.show = true;
-                }
-            };
-        }
-    </script>
+    <script th:src="@{/js/modal-delete-confirmation.js}"></script>
     <script th:replace="~{fragments/alerts :: alert-js}"></script>
 </th:block>
 </body>

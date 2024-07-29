@@ -14,7 +14,6 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Set;
 
 @Entity

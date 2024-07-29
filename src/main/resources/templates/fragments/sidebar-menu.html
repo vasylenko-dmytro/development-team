@@ -2,16 +2,7 @@
 <div th:fragment="mobile"
      class="relative z-40 lg:hidden" role="dialog" aria-modal="true"
      x-show="isVisible()">
-    <!--
-      Off-canvas menu backdrop, show/hide based on off-canvas menu state.
 
-      Entering: "transition-opacity ease-linear duration-300"
-        From: "opacity-0"
-        To: "opacity-100"
-      Leaving: "transition-opacity ease-linear duration-300"
-        From: "opacity-100"
-        To: "opacity-0"
-    -->
     <div class="fixed inset-0 bg-gray-600 bg-opacity-75"
          x-show="isVisible()"
          x-cloak
@@ -23,16 +14,7 @@
          x-transition:leave-end="opacity-0"></div>
 
     <div class="fixed inset-0 z-40 flex">
-        <!--
-          Off-canvas menu, show/hide based on off-canvas menu state.
 
-          Entering: "transition ease-in-out duration-300 transform"
-            From: "-translate-x-full"
-            To: "translate-x-0"
-          Leaving: "transition ease-in-out duration-300 transform"
-            From: "translate-x-0"
-            To: "-translate-x-full"
-        -->
         <div class="relative flex w-full max-w-xs flex-1 flex-col bg-white pt-5 pb-4"
              x-show="isVisible()"
              x-cloak
@@ -42,16 +24,7 @@
              x-transition:leave="transition ease-in-out duration-300 transform"
              x-transition:leave-start="translate-x-0"
              x-transition:leave-end="-translate-x-full">
-            <!--
-              Close button, show/hide based on off-canvas menu state.
 
-              Entering: "ease-in-out duration-300"
-                From: "opacity-0"
-                To: "opacity-100"
-              Leaving: "ease-in-out duration-300"
-                From: "opacity-100"
-                To: "opacity-0"
-            -->
             <div class="absolute top-0 right-0 -mr-12 pt-2">
                 <button type="button"
                         class="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
@@ -71,7 +44,7 @@
             </div>
             <div class="mt-5 h-0 flex-1 overflow-y-auto">
                 <nav class="space-y-1 px-2">
-                    <a th:replace="~{fragments/sidebar-buttons :: mobile-button(link='#', title='Dashboard', menuItem='dashboard', icon='dashboard')}"></a>
+                    <a th:replace="~{fragments/sidebar-buttons :: mobile-button(link=@{/}, title='Dashboard', menuItem='dashboard', icon='dashboard')}"></a>
                     <a th:replace="~{fragments/sidebar-buttons :: mobile-button(link=@{/users}, title='Users', menuItem='users', icon='users')}"></a>
                     <a th:replace="~{fragments/sidebar-buttons :: mobile-button(link=@{/teams}, title='Teams', menuItem='teams', icon='user-group')}"></a>
                     <a th:replace="~{fragments/sidebar-buttons :: mobile-button(link='#', title='Calendar', menuItem='calendar', icon='calendar')}"></a>
@@ -98,7 +71,7 @@
         </div>
         <div class="mt-5 flex flex-grow flex-col">
             <nav class="flex-1 space-y-1 px-2 pb-4">
-                <a th:replace="~{fragments/sidebar-buttons :: desktop-button(link='#', title=#{menu.dashboard}, menuItem='dashboard', icon='dashboard')}"></a>
+                <a th:replace="~{fragments/sidebar-buttons :: desktop-button(link=@{/}, title=#{menu.dashboard}, menuItem='dashboard', icon='dashboard')}"></a>
                 <a th:replace="~{fragments/sidebar-buttons :: desktop-button(link=@{/users}, title=#{menu.users}, menuItem='users', icon='users')}"></a>
                 <a th:replace="~{fragments/sidebar-buttons :: desktop-button(link=@{/teams}, title=#{menu.teams}, menuItem='teams', icon='user-group')}"></a>
                 <a th:replace="~{fragments/sidebar-buttons :: desktop-button(link='#', title=#{menu.calendar}, menuItem='calendar', icon='calendar')}"></a>

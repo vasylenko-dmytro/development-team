@@ -33,9 +33,9 @@ public class GlobalControllerAdvice {
         return result;
     }
 
-    @InitBinder 
+    @InitBinder
     public void initBinder(WebDataBinder binder) {
-        StringTrimmerEditor stringtrimmer = new StringTrimmerEditor(false); 
-        binder.registerCustomEditor(String.class, stringtrimmer); 
+        StringTrimmerEditor stringTrimmer = new StringTrimmerEditor(false);
+        binder.registerCustomEditor(String.class, stringTrimmer);
     }
 }

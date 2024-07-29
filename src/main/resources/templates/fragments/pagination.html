@@ -30,14 +30,8 @@
     <!-- Desktop pagination -->
     <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
         <div>
-            <p id="pagination-summary" class="text-sm leading-5 text-gray-700">
-                Showing
-                <span class="font-medium" th:text="${(page.getSize() * page.getNumber()) + 1}">1</span>
-                to
-                <span class="font-medium" th:text="${(page.getSize() * page.getNumber()) + page.getNumberOfElements()}">10</span>
-                of
-                <span class="font-medium" th:text="${page.getTotalElements()}">97</span>
-                results
+            <p id="pagination-summary" class="text-sm leading-5 text-gray-700"
+                th:text="#{pagination.summary(${(page.getSize() * page.getNumber()) + 1}, ${(page.getSize() * page.getNumber()) + page.getNumberOfElements()}, ${page.getTotalElements()})}">
             </p>
         </div>
         <div>
@@ -82,6 +76,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>
