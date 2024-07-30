@@ -10,6 +10,8 @@ import com.vasylenko.application.model.team.member.TeamMemberPosition;
 import com.vasylenko.application.service.TeamService;
 import com.vasylenko.application.service.UserService;
 import com.vasylenko.application.util.EditMode;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +34,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/teams")
+@Tag(name = "Team Management", description = "Operations related to team management")
 public class TeamController {
 
     private final TeamService service;
@@ -48,6 +51,7 @@ public class TeamController {
     }
 
     @GetMapping
+    @Operation(summary = "Get list of teams", description = "Returns a paginated list of teams")
     public String index(Model model, @SortDefault.SortDefaults(@SortDefault("name")) Pageable pageable) {
         model.addAttribute("teams", service.getTeams(pageable));
         return "teams/list";
@@ -55,6 +59,7 @@ public class TeamController {
 
     @GetMapping("/create")
     @Secured("ROLE_ADMIN")
+    @Operation(summary = "Show create team form", description = "Displays the form to create a new team")
     public String createTeamForm(Model model) {
         model.addAttribute("team", new CreateTeamFormData());
         model.addAttribute("users", userService.getAllUsersNameAndId());
@@ -64,6 +69,7 @@ public class TeamController {
 
     @PostMapping("/create")
     @Secured("ROLE_ADMIN")
+    @Operation(summary = "Create a new team", description = "Creates a new team with the provided data")
     public String doCreateTeam(@Valid @ModelAttribute("team") CreateTeamFormData formData,
                                BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -79,6 +85,7 @@ public class TeamController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Show edit team form", description = "Displays the form to edit an existing team")
     public String editTeamForm(@PathVariable("id") TeamId teamId, Model model) {
         Team team = service.getTeamWithMembers(teamId)
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
@@ -91,6 +98,7 @@ public class TeamController {
 
     @PostMapping("/{id}")
     @Secured("ROLE_ADMIN")
+    @Operation(summary = "Edit an existing team", description = "Updates an existing team with the provided data")
     public String doEditTeam(@PathVariable("id") TeamId teamId,
                              @Valid @ModelAttribute("team") EditTeamFormData formData,
                              BindingResult bindingResult,
@@ -106,10 +114,10 @@ public class TeamController {
 
         return "redirect:/teams";
     }
-    // end::doEditTeam[]
 
     @PostMapping("/{id}/delete")
     @Secured("ROLE_ADMIN")
+    @Operation(summary = "Delete a team", description = "Deletes an existing team by ID")
     public String doDeleteTeam(@PathVariable("id") TeamId teamId,
                                RedirectAttributes redirectAttributes) {
         Team team = service.getTeam(teamId)
@@ -124,6 +132,7 @@ public class TeamController {
 
     @GetMapping("/edit-team-member")
     @Secured("ROLE_ADMIN")
+    @Operation(summary = "Get edit team member fragment", description = "Returns the fragment to edit a team member")
     public String getEditTeamMemberFragment(Model model, @RequestParam("index") int index) {
         model.addAttribute("index", index);
         model.addAttribute("users", userService.getAllUsersNameAndId());
