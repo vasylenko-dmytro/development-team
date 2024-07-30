@@ -28,6 +28,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * DataInitializer is responsible for initializing the database with sample data.
+ */
 @Component
 @Profile("init-db")
 public class DataInitializer implements CommandLineRunner {
@@ -49,14 +52,39 @@ public class DataInitializer implements CommandLineRunner {
         this.teamService = teamService;
     }
 
+    /**
+     * Runs the data initialization process.
+     *
+     * @param args command line arguments
+     */
     @Override
     public void run(String... args) {
-        Set<User> generatedUsers = new HashSet<>();
+        Set<User> generatedUsers = generateUsers();
+        createAdministrator();
+
+        Streams.forEachPair(generatedUsers.stream().limit(TEAM_NAMES.length),
+                Arrays.stream(TEAM_NAMES),
+                (user, teamName) -> createTeam(user, teamName, generatedUsers));
+    }
+
+    /**
+     * Generates a set of random users.
+     *
+     * @return a set of generated users
+     */
+    private Set<User> generateUsers() {
+        Set<User> users = new HashSet<>();
         for (int i = 0; i < 20; i++) {
             CreateUserParameters parameters = newRandomUserParameters();
-            generatedUsers.add(userService.createUser(parameters));
+            users.add(userService.createUser(parameters));
         }
+        return users;
+    }
 
+    /**
+     * Creates an administrator user.
+     */
+    private void createAdministrator() {
         UserName userName = randomUserName();
         CreateUserParameters parameters = new CreateUserParameters(userName,
                 userName.getFirstName(),
@@ -65,37 +93,37 @@ public class DataInitializer implements CommandLineRunner {
                 generateEmailForUserName(userName),
                 randomPhoneNumber());
         userService.createAdministrator(parameters);
-
-        Streams.forEachPair(generatedUsers.stream().limit(TEAM_NAMES.length),
-                Arrays.stream(TEAM_NAMES),
-                (user, teamName) -> {
-                    Set<TeamMemberParameters> members = Set.of(
-                            new TeamMemberParameters(randomUser(generatedUsers),
-                                    TeamMemberPosition.BUSINESS_ANALYST),
-                            new TeamMemberParameters(randomUser(generatedUsers),
-                                    TeamMemberPosition.PRODUCT_OWNER),
-                            new TeamMemberParameters(randomUser(generatedUsers),
-                                    TeamMemberPosition.PROJECT_MANAGER),
-                            new TeamMemberParameters(randomUser(generatedUsers),
-                                    TeamMemberPosition.SOFTWARE_ARCHITECT),
-                            new TeamMemberParameters(randomUser(generatedUsers),
-                                    TeamMemberPosition.SCRUM_MASTER),
-                            new TeamMemberParameters(randomUser(generatedUsers),
-                                    TeamMemberPosition.DEVELOPER),
-                            new TeamMemberParameters(randomUser(generatedUsers),
-                                    TeamMemberPosition.QA_ENGINEER),
-                            new TeamMemberParameters(randomUser(generatedUsers),
-                                    TeamMemberPosition.DEVOPS),
-                            new TeamMemberParameters(randomUser(generatedUsers),
-                                    TeamMemberPosition.UX_UI_DESIGNER)
-                    );
-                    CreateTeamParameters teamParameters = new CreateTeamParameters(teamName,
-                            user.getId(),
-                            members);
-                    teamService.createTeam(teamParameters);
-                });
     }
 
+    /**
+     * Creates a team with the given user as the team lead.
+     *
+     * @param user the team lead
+     * @param teamName the name of the team
+     * @param generatedUsers the set of generated users
+     */
+    private void createTeam(User user, String teamName, Set<User> generatedUsers) {
+        Set<TeamMemberParameters> members = Set.of(
+                new TeamMemberParameters(randomUser(generatedUsers), TeamMemberPosition.BUSINESS_ANALYST),
+                new TeamMemberParameters(randomUser(generatedUsers), TeamMemberPosition.PRODUCT_OWNER),
+                new TeamMemberParameters(randomUser(generatedUsers), TeamMemberPosition.PROJECT_MANAGER),
+                new TeamMemberParameters(randomUser(generatedUsers), TeamMemberPosition.SOFTWARE_ARCHITECT),
+                new TeamMemberParameters(randomUser(generatedUsers), TeamMemberPosition.SCRUM_MASTER),
+                new TeamMemberParameters(randomUser(generatedUsers), TeamMemberPosition.DEVELOPER),
+                new TeamMemberParameters(randomUser(generatedUsers), TeamMemberPosition.QA_ENGINEER),
+                new TeamMemberParameters(randomUser(generatedUsers), TeamMemberPosition.DEVOPS),
+                new TeamMemberParameters(randomUser(generatedUsers), TeamMemberPosition.UX_UI_DESIGNER)
+        );
+        CreateTeamParameters teamParameters = new CreateTeamParameters(teamName, user.getId(), members);
+        teamService.createTeam(teamParameters);
+    }
+
+    /**
+     * Selects a random user from the set of users.
+     *
+     * @param users the set of users
+     * @return the ID of the selected user
+     */
     private UserId randomUser(Set<User> users) {
         int index = faker.random().nextInt(users.size());
         Iterator<User> iter = users.iterator();
@@ -105,11 +133,16 @@ public class DataInitializer implements CommandLineRunner {
         return iter.next().getId();
     }
 
+    /**
+     * Generates random parameters for creating a new user.
+     *
+     * @return the generated parameters
+     */
     private CreateUserParameters newRandomUserParameters() {
         UserName userName = randomUserName();
         Gender gender = randomGender();
         // TODO: 'net.datafaker.providers.base.DateAndTime' is deprecated since version 2.3.0 and marked for removal
-        LocalDate birthday = LocalDate.ofInstant((faker.date().birthday(10, 40)).toInstant(), ZoneId.systemDefault());
+        LocalDate birthday = LocalDate.ofInstant(faker.date().birthday(10, 40).toInstant(), ZoneId.systemDefault());
         Email email = generateEmailForUserName(userName);
         PhoneNumber phoneNumber = randomPhoneNumber();
         return new CreateUserParameters(userName, userName.getFirstName(), gender, birthday, email, phoneNumber);
