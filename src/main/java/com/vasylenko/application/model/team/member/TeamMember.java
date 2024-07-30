@@ -10,8 +10,17 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+/**
+ * Entity representing a team member.
+ */
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class TeamMember extends AbstractEntity<TeamMemberId> {
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
@@ -25,30 +34,16 @@ public class TeamMember extends AbstractEntity<TeamMemberId> {
     @NotNull
     private TeamMemberPosition position;
 
-    protected TeamMember() {
-    }
-
-    public TeamMember(TeamMemberId id,
-                      User member,
-                      TeamMemberPosition position) {
+    /**
+     * Constructs a new TeamMember with the given details.
+     *
+     * @param id the ID of the team member
+     * @param member the user who is a member of the team
+     * @param position the position of the team member
+     */
+    public TeamMember(TeamMemberId id, User member, TeamMemberPosition position) {
         super(id);
         this.member = member;
         this.position = position;
-    }
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
-    public User getMember() {
-        return member;
-    }
-
-    public TeamMemberPosition getPosition() {
-        return position;
     }
 }

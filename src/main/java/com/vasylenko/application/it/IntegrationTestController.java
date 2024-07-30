@@ -57,8 +57,8 @@ public class IntegrationTestController {
 
         teamService.createTeam(new CreateTeamParameters(
                 "Test Team",
-                userNameAndId.getId(),
-                Set.of(new TeamMemberParameters(users.last().getId(),
+                userNameAndId.id(),
+                Set.of(new TeamMemberParameters(users.last().id(),
                         TeamMemberPosition.DEVELOPER))));
     }
 

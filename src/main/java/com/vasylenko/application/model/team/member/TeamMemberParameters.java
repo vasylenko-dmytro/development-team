@@ -1,21 +1,12 @@
 package com.vasylenko.application.model.team.member;
 
 import com.vasylenko.application.model.user.UserId;
+import jakarta.validation.constraints.NotNull;
 
-public class TeamMemberParameters {
-    private final UserId memberId;
-    private final TeamMemberPosition position;
-
-    public TeamMemberParameters(UserId memberId, TeamMemberPosition position) {
-        this.memberId = memberId;
-        this.position = position;
-    }
-
-    public UserId getMemberId() {
-        return memberId;
-    }
-
-    public TeamMemberPosition getPosition() {
-        return position;
-    }
+/**
+ * Class representing the parameters for a team member.
+ */
+public record TeamMemberParameters(
+        @NotNull UserId memberId,
+        @NotNull TeamMemberPosition position) {
 }

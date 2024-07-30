@@ -2,6 +2,7 @@ package com.vasylenko.application.validation;
 
 import com.vasylenko.application.model.user.User;
 import com.vasylenko.application.model.user.UserId;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,10 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Custom implementation of UserDetails for application users.
+ */
+@Getter
 public class ApplicationUserDetails implements UserDetails {  
     private final UserId id;
     private final String username;
@@ -17,6 +22,11 @@ public class ApplicationUserDetails implements UserDetails {
     private final String password;
     private final Set<GrantedAuthority> authorities;
 
+    /**
+     * Constructs an ApplicationUserDetails from a User entity.
+     *
+     * @param user the User entity
+     */
     public ApplicationUserDetails(User user) {
         this.id = user.getId();  
         this.username = user.getEmail().asString();  
@@ -60,13 +70,5 @@ public class ApplicationUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public UserId getId() {
-        return id;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }

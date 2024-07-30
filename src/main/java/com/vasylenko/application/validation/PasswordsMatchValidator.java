@@ -4,9 +4,14 @@ import com.vasylenko.application.formdata.CreateUserFormData;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
+/**
+ * Validator to check if the passwords match in the CreateUserFormData.
+ */
 public class PasswordsMatchValidator implements ConstraintValidator<PasswordsMatch, CreateUserFormData> {
+
     @Override
     public void initialize(PasswordsMatch constraintAnnotation) {
+        // No initialization required
     }
 
     @Override

@@ -41,7 +41,7 @@ public class BaseUserFormData {
     private String email;
 
     @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "DD-MMM-YYYY")
     private LocalDate birthday;
 
     @NotNull

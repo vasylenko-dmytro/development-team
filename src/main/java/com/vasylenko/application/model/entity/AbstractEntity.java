@@ -6,35 +6,46 @@ import jakarta.persistence.MappedSuperclass;
 import java.util.Objects;
 
 /**
- * Abstract super class for entities. We are assuming that early primary key
- * generation will be used.
+ * Abstract base class for entities with an ID.
  *
  * @param <T> the type of {@link EntityId} that will be used for this entity
  */
 @MappedSuperclass
 public abstract class AbstractEntity<T extends EntityId<?>> implements Entity<T> {
+
     @EmbeddedId
     private T id;
 
+    /**
+     * Default constructor for JPA.
+     */
     protected AbstractEntity() {
     }
 
+    /**
+     * Constructs a new AbstractEntity with the given ID.
+     *
+     * @param id the ID of the entity, must not be null
+     */
     public AbstractEntity(T id) {
         this.id = Objects.requireNonNull(id, "id should not be null");
     }
 
+    /**
+     * Returns the ID of the entity.
+     *
+     * @return the entity ID
+     */
     @Override
     public T getId() {
         return id;
     }
 
+
     /**
-     * Equals implementation for entities should use the <code>id</code> only
-     * to verify equality (As opposed to value objects that should compare all properties). For this reason,
-     * this method has been made final. This works fine with Hibernate because we use early primary key generation,
-     * so the <code>id</code> is always present.
+     * Checks if this entity is equal to another object.
      *
-     * @param obj the object to compare this object to
+     * @param obj the object to compare to
      * @return true if the objects are equal, false otherwise
      */
     @Override
@@ -54,9 +65,7 @@ public abstract class AbstractEntity<T extends EntityId<?>> implements Entity<T>
     }
 
     /**
-     * HashCode implementation for entities should use the <code>id</code> only to calculate the hash code (As opposed
-     * to value objects that should use all properties). For this reason, this method has been made final. This works
-     * fine with Hibernate because we use early primary key generation, so the <code>id</code> is always present.
+     * Returns the hash code of this entity.
      *
      * @return the hash code
      */
@@ -65,6 +74,11 @@ public abstract class AbstractEntity<T extends EntityId<?>> implements Entity<T>
         return Objects.hash(getId());
     }
 
+    /**
+     * Returns a string representation of this entity.
+     *
+     * @return a string representation of the entity
+     */
     @Override
     public String toString() {
         return String.format("%s[id=%s]", getClass().getSimpleName(), getId());

@@ -2,29 +2,22 @@ package com.vasylenko.application.model.team.parameters;
 
 import com.vasylenko.application.model.team.member.TeamMemberParameters;
 import com.vasylenko.application.model.user.UserId;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.util.Set;
 
+/**
+ * Class representing the parameters for creating a team.
+ */
+@Getter
+@ToString
+@EqualsAndHashCode
+@RequiredArgsConstructor
 public class CreateTeamParameters {
     private final String name;
     private final UserId leadId;
     private final Set<TeamMemberParameters> members;
-
-    public CreateTeamParameters(String name, UserId leadId, Set<TeamMemberParameters> members) {
-        this.name = name;
-        this.leadId = leadId;
-        this.members = members;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public UserId getLeadId() {
-        return leadId;
-    }
-
-    public Set<TeamMemberParameters> getMembers() {
-        return members;
-    }
 }

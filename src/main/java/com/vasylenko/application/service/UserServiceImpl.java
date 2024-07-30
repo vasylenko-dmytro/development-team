@@ -161,12 +161,12 @@ public class UserServiceImpl implements UserService {
         Iterable<User> users = repository.findAll();
         return ImmutableSortedSet.copyOf(
                 Comparator.comparing(userNameAndId ->
-                        userNameAndId.getUserName().getFullName()),
+                        userNameAndId.userName().getFullName()),
                 StreamSupport.stream(users.spliterator(), false)
                         .map(user -> new UserNameAndId(user.getId(),
                                 user.getUserName()))
                         .sorted(Comparator.comparing(userNameAndId ->
-                                userNameAndId.getUserName().getFullName()))
+                                userNameAndId.userName().getFullName()))
                         .collect(Collectors.toList()));
     }
 

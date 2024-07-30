@@ -1,19 +1,11 @@
 package com.vasylenko.application.model.user;
 
-public class UserNameAndId {
-    private final UserId id;
-    private final UserName userName;
+import jakarta.validation.constraints.NotNull;
 
-    public UserNameAndId(UserId id, UserName userName) {
-        this.id = id;
-        this.userName = userName;
+/**
+ * Class representing a user's ID and name.
+ */
+public record UserNameAndId(
+        @NotNull UserId id,
+        @NotNull UserName userName) {
     }
-
-    public UserId getId() {
-        return id;
-    }
-
-    public UserName getUserName() {
-        return userName;
-    }
-}

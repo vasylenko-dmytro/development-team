@@ -64,7 +64,7 @@ public class TeamServiceImpl implements TeamService {
         Team team = new Team(repository.nextId(), name, lead);
         Set<TeamMemberParameters> members = parameters.getMembers();
         for (TeamMemberParameters member : members) {
-            team.addMember(new TeamMember(repository.nextMemberId(), getUser(member.getMemberId()), member.getPosition()));
+            team.addMember(new TeamMember(repository.nextMemberId(), getUser(member.memberId()), member.position()));
         }
         repository.save(team);
     }
@@ -86,7 +86,7 @@ public class TeamServiceImpl implements TeamService {
         team.setLead(getUser(parameters.getLeadId()));
         team.setMembers(parameters.getMembers().stream()
                 .map(teamMemberParameters -> new TeamMember(repository.nextMemberId(),
-                        getUser(teamMemberParameters.getMemberId()), teamMemberParameters.getPosition()))
+                        getUser(teamMemberParameters.memberId()), teamMemberParameters.position()))
                 .collect(Collectors.toSet()));
 
     }

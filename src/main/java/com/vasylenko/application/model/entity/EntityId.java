@@ -3,23 +3,23 @@ package com.vasylenko.application.model.entity;
 import java.io.Serializable;
 
 /**
- * Interface for primary keys of entities.
+ * Interface representing an entity ID.
  *
- * @param <T> the underlying type of the entity id
+ * @param <T> the type of the ID
  */
 public interface EntityId<T> extends Serializable {
 
     /**
-     * The value of the underlying type
+     * Returns the ID.
      *
-     * @return the value
+     * @return the ID
      */
     T getId();
 
     /**
-     * Returns a string representation of the id (e.g. for usage in REST endpoints).
+     * Returns the ID as a string.
      *
-     * @return a human friendly String representation of the id
+     * @return the ID as a string
      */
     String asString();
 }

@@ -1,6 +1,6 @@
 package com.vasylenko.application.model.user;
 
-import com.vasylenko.application.model.entity.AbstractVersionedEntity;
+import com.vasylenko.application.model.entity.AbstractEntity;
 import com.vasylenko.application.model.Gender;
 import com.vasylenko.application.model.Email;
 import com.vasylenko.application.model.PhoneNumber;
@@ -11,34 +11,52 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.Set;
 
+/**
+ * Class representing a user.
+ */
 @Entity
 @Table(name = "tt_user")
-public class User extends AbstractVersionedEntity<UserId> {
+@Getter
+@Setter
+public class User extends AbstractEntity<UserId> {
 
     @ElementCollection(targetClass = UserRole.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles")
     @Column(name = "role")
     private Set<UserRole> roles;
+
     @NotNull
     private String password;
+
     @NotNull
     private UserName userName;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
     @NotNull
     private LocalDate birthday;
+
     @NotNull
     private Email email;
+
     @NotNull
     private PhoneNumber phoneNumber;
+
     private byte[] avatar;
+
+    @Version
+    private long version;
 
     protected User() {
     }
@@ -79,71 +97,5 @@ public class User extends AbstractVersionedEntity<UserId> {
                                            Email email,
                                            PhoneNumber phoneNumber) {
         return new User(id, Set.of(UserRole.ADMIN), userName, encodedPassword, gender, birthday, email, phoneNumber);
-    }
-
-    public Set<UserRole> getRoles() {
-        return roles;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public UserName getUserName() {
-        return userName;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public LocalDate getBirthday() {
-        return birthday;
-    }
-
-    public Email getEmail() {
-        return email;
-    }
-
-    public PhoneNumber getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setUserName(UserName userName) {
-        this.userName = userName;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
-    }
-
-    public void setEmail(Email email) {
-        this.email = email;
-    }
-
-    public void setPhoneNumber(PhoneNumber phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    /**
-     * The avatar image of the driver. Null if no avatar has been set.
-     *
-     * @return the image bytes
-     */
-    public byte[] getAvatar() {
-        return avatar;
-    }
-
-    /**
-     * Set the avatar image of the driver.
-     *
-     * @param avatar the image bytes
-     */
-    public void setAvatar(byte[] avatar) {
-        this.avatar = avatar;
     }
 }
