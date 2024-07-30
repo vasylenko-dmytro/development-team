@@ -1,3 +1,4 @@
+// Function to manage the visibility of the user popup menu
 function userPopupMenu() {
     return {
         show: false,

@@ -1,3 +1,4 @@
+// Function to manage the visibility and data of the delete confirmation modal
 function modalDeleteConfirmation() {
     return {
         show: false,

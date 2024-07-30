@@ -1,3 +1,4 @@
+// Function to manage alert message visibility
 function messageAlert() {
     return {
         show: true,

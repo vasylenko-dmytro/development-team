@@ -1,3 +1,4 @@
+// Function to manage the visibility of the sidebar menu
 function sidebarMenu() {
     return {
         show: false,
