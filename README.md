@@ -19,6 +19,8 @@ Also used unit and integration tests to ensure proper functionality of the code 
   - [Watching for Changes](#watching-for-changes)
   - [Serving with BrowserSync](#serving-with-browsersync)
 - [Configuration](#configuration)
+- [API Documentation](#api-documentation)
+  - [Swagger](#swagger)
 - [Database](#database)
   - [Flyway](#flyway)
   - [Testcontainers](#testcontainers)
@@ -40,6 +42,7 @@ Also used unit and integration tests to ensure proper functionality of the code 
 * Gradle 8.8
 * Spring Boot 3
 * Spring Security 6
+* Swagger 3
 * Thymeleaf 3
 * Tailwindcss 3.2
 * Alpinejs 3.14
@@ -115,6 +118,13 @@ Configuration in `package.json`:
 }
 ```
 
+## API Documentation
+### Swagger
+The project uses **Swagger** to document the API.  
+To access the Swagger UI, go to the following URL:
+```plaintext
+http://localhost:8080/swagger-ui/index.html
+```
 ## Database
 The project uses **PostgreSQL** database.
 
