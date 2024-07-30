@@ -1,0 +1,6 @@
+{
+  "name": "dev-team-tests",
+  "devDependencies": {
+    "cypress": "^13.13.1"
+  }
+}

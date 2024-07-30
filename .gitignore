@@ -18,3 +18,5 @@ build/
 /.frontend-gradle-plugin/
 /node/
 /node_modules/
+/src/test/e2e/node_modules/
+/src/test/e2e/package-lock.json

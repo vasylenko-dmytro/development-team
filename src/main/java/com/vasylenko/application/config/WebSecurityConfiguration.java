@@ -34,8 +34,11 @@ public class WebSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(httpSecurityCsrfConfigurer ->
+                httpSecurityCsrfConfigurer.ignoringRequestMatchers("/api/integration-test/**"));
         http.authorizeHttpRequests(authz -> authz
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/api/integration-test/**").permitAll()
                         .requestMatchers("/svg/*").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
