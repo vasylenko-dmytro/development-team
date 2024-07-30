@@ -6,17 +6,14 @@
             class="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 lg:hidden"
             @click.stop="openSidebar">
         <span class="sr-only">Open sidebar</span>
-        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-             aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"/>
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"/>
         </svg>
     </button>
     <div class="flex flex-1 justify-between px-4">
         <div class="flex flex-1">
         </div>
         <div class="ml-4 flex items-center lg:ml-6">
-
             <!-- Profile dropdown -->
             <div class="relative ml-3"
                  x-data="userPopupMenu()"
@@ -49,12 +46,9 @@
                     <div class="block px-4 py-2 text-xs text-gray-400 font-mono border-b truncate"
                          sec:authentication="principal.username"></div>
                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1"
-                       th:text="#{menu.profile}"
-                    >Your Profile</a>
-
+                       th:text="#{menu.profile}">Your Profile</a>
                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1"
-                       th:text="#{menu.settings}"
-                    >Settings</a>
+                       th:text="#{menu.settings}">Settings</a>
 
                     <div class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         <form th:action="@{/logout}" method="post">

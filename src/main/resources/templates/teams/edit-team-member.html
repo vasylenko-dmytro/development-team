@@ -8,22 +8,26 @@
     <div class="grid grid-cols-1 row-gap-6 col-gap-4 sm:grid-cols-6">
         <div class="sm:col-span-2">
             <div class="mt-1 rounded-md shadow-sm">
-                <select class="max-w-lg block focus:ring-green-500 focus:border-green-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
-                        th:field="*{members[__${index}__].memberId}">
-                    <option th:each="user : ${users}"
-                            th:text="${user.userName.fullName}"
-                            th:value="${user.id.asString()}">
-                </select>
+                <label>
+                    <select class="max-w-lg block focus:ring-green-500 focus:border-green-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                            th:field="*{members[__${index}__].memberId}">
+                        <option th:each="user : ${users}"
+                                th:text="${user.userName.fullName}"
+                                th:value="${user.id.asString()}">
+                    </select>
+                </label>
             </div>
         </div>
         <div class="sm:col-span-2">
             <div class="mt-1 rounded-md shadow-sm">
-                <select class="max-w-lg block focus:ring-green-500 focus:border-green-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
-                        th:field="*{members[__${index}__].position}">
-                    <option th:each="position : ${positions}"
-                            th:text="#{'MemberPosition.' + ${position}}"
-                            th:value="${position}">
-                </select>
+                <label>
+                    <select class="max-w-lg block focus:ring-green-500 focus:border-green-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                            th:field="*{members[__${index}__].position}">
+                        <option th:each="position : ${positions}"
+                                th:text="#{'MemberPosition.' + ${position}}"
+                                th:value="${position}">
+                    </select>
+                </label>
             </div>
         </div>
         <div class="ml-1 sm:col-span-2 flex items-center text-green-600 hover:text-green-900">

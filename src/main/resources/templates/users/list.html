@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html
-        xmlns:th="http://www.thymeleaf.org"
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-        layout:decorate="~{layout/layout}"
-        th:with="activeMenuItem='users'">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/layout}"
+      th:with="activeMenuItem='users'">
 <head>
     <title>Users</title>
 </head>
@@ -45,7 +44,9 @@
                                         class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
                                         <a href="javascript:void(0)"
                                            class="text-green-600 hover:text-green-900"
-                                           @click="$dispatch('open-delete-modal', {name, deleteUrl})" th:text="#{delete}">Delete</a>
+                                           @click="$dispatch('open-delete-modal', {name, deleteUrl})" th:text="#{delete}">
+                                            Delete
+                                        </a>
                                     </td>
                                 </th:block>
                             </tr>
@@ -96,8 +97,7 @@
                         <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
                             <!-- Heroicon name: outline/exclamation -->
                             <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                             </svg>
                         </div>
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
@@ -106,8 +106,7 @@
                             </h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">
-                                    Are you sure you want to delete user <span class="italic"
-                                                                               x-text="getName()"></span>?
+                                    Are you sure you want to delete user <span class="italic" x-text="getName()"></span>?
                                 </p>
                             </div>
                         </div>
@@ -121,13 +120,15 @@
         <span class="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
           <button type="submit"
                   class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-            Delete</button>
+            Delete
+          </button>
         </span>
                             <span class="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
           <button type="button"
                   @click="hideModal"
                   class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm">
-            Cancel</button>
+            Cancel
+          </button>
         </span>
                         </div>
                     </form>

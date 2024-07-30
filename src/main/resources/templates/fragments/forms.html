@@ -28,7 +28,9 @@
     </div>
     <p th:if="${#fields.hasErrors('__${fieldName}__')}"
        th:text="${#strings.listJoin(#fields.errors('__${fieldName}__'), ', ')}"
-       class="mt-2 text-sm text-red-600" th:id="'__${fieldName}__'+ '-error'">Field validation error message(s).</p>
+       class="mt-2 text-sm text-red-600" th:id="'__${fieldName}__'+ '-error'">
+        Field validation error message(s).
+    </p>
 </div>
 <div th:fragment="dateinput(labelText, fieldName, cssClass)"
      th:class="${cssClass}">
@@ -54,7 +56,9 @@
     </div>
     <p th:if="${#fields.hasErrors('__${fieldName}__')}"
        th:text="${#strings.listJoin(#fields.errors('__${fieldName}__'), ', ')}"
-       class="mt-2 text-sm text-red-600" th:id="'__${fieldName}__'+ '-error'">Field validation error message(s).</p>
+       class="mt-2 text-sm text-red-600" th:id="'__${fieldName}__'+ '-error'">
+        Field validation error message(s).
+    </p>
 </div>
 <div th:fragment="fielderrors"
      class="rounded-md bg-red-50 p-4 mb-4"
