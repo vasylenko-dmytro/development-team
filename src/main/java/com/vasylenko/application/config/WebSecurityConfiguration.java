@@ -13,6 +13,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Web Security configuration.
+ * <p> Configures the application with the following beans:
+ * <ul> <li> An authentication provider using DAO authentication. </li>
+ * <li> A security filter chain for HTTP security configuration. </li></ul>
+ * </p>
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
@@ -26,6 +33,11 @@ public class WebSecurityConfiguration {
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * Configures the authentication provider with user details service and password encoder.
+     *
+     * @return the configured authentication provider
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -34,6 +46,14 @@ public class WebSecurityConfiguration {
         return authenticationProvider;
     }
 
+
+    /**
+     * Configures the security filter chain with custom HTTP security settings.
+     *
+     * @param http the HTTP security builder
+     * @return the configured security filter chain
+     * @throws Exception if an error occurs during configuration
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(httpSecurityCsrfConfigurer ->
