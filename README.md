@@ -62,10 +62,9 @@ _**The Light sidebar with light header**_ requires the form plugin, so we need t
 ```sh
 npm install -D @tailwindcss/forms@latest
 ```
-
 To install Cypress as a dependency:
 ```sh
-npm install cypress cypress-multi-reporters mocha mochawesome --save-dev
+npm install cypress --save-dev
 ```
 
 ## Building
@@ -213,6 +212,20 @@ npm run build
 To run the tests, use the following command:
 ```sh
 ./gradlew test
+```
+### Integration Tests
+To run the Cypress test, execute the following steps:
+1. Add an extra run configuration in your IDE that enables the `integration-test` profile
+2. Run from the `src/test/e2e` directory
+    ```shell
+    npx cypress open
+    ```
+3. Click on the test you want to run in the Cypress desktop application
+4. The test will run in the browser, and you can see the results
+
+Alternatively, you can run the tests from the command line:
+```sh
+npx cypress run
 ```
 
 ## License
