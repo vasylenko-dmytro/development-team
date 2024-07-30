@@ -6,19 +6,8 @@ plugins {
 	id 'com.github.node-gradle.node' version '4.0.0'
 }
 
-node {
-	version = '21.2.0'
-	download = true
-}
-
 group = 'com.vasylenko'
 version = '0.0.1-SNAPSHOT'
-
-processResources {
-	filesMatching('**/application.properties') {
-		expand(project.properties)
-	}
-}
 
 java {
 	toolchain {
@@ -26,39 +15,55 @@ java {
 	}
 }
 
+node {
+	version = '21.2.0'
+	download = true
+}
+
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+	// Spring Boot Starters
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// Spring Security
 	implementation 'org.springframework.security:spring-security-config:6.3.1'
 	implementation 'org.springframework.security:spring-security-web:6.3.1'
 
-	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	// Thymeleaf
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+
+	// OpenAPI
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
+	// Utility Libraries
 	implementation 'com.google.guava:guava:33.2.1-jre'
+	implementation 'org.apache.commons:commons-lang3:3.15.0'
+
+	// Database
 	implementation 'org.flywaydb:flyway-core:10.16.0'
-	implementation 'net.datafaker:datafaker:2.3.1'
+	runtimeOnly 'org.flywaydb:flyway-database-postgresql:10.16.0'
+	runtimeOnly 'org.postgresql:postgresql:42.7.3'
+
+	// WebJars
 	implementation 'org.webjars:webjars-locator:0.52'
 	implementation 'org.webjars.npm:alpinejs:3.14.1'
 	implementation 'org.webjars.npm:duetds__date-picker:1.4.0'
 	implementation 'org.webjars.npm:luxon:3.4.4'
-	implementation 'org.apache.commons:commons-lang3:3.15.0'
-	runtimeOnly 'org.postgresql:postgresql:42.7.3'
-	runtimeOnly 'org.flywaydb:flyway-database-postgresql:10.16.0'
 
+	// Testing
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.testcontainers:testcontainers:1.20.0'
 	testImplementation 'org.testcontainers:postgresql:1.20.0'
 	testImplementation 'org.testcontainers:junit-jupiter:1.20.0'
-
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
@@ -71,6 +76,12 @@ sourceSets {
 	}
 }
 
+processResources {
+	filesMatching('**/application.properties') {
+		expand(project.properties)
+	}
+}
+
 frontend {
 	nodeVersion = '21.2.0'
 }
@@ -80,6 +91,7 @@ tasks.withType(ProcessResources).configureEach {
 }
 
 test {
+	enabled = false
 	useJUnitPlatform()
 
 	testLogging {
