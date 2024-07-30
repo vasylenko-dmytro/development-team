@@ -30,6 +30,7 @@ Also used unit and integration tests to ensure proper functionality of the code 
 - [Internationalization](#internationalization)
 - [Running](#running)
 - [Testing](#testing)
+  - [Integration Tests](#integration-tests)
 - [License](#license)
 - [Contributing](#contributing)
 - [Author](#author)
