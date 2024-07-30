@@ -14,7 +14,7 @@ document.querySelector('#avatarFile').addEventListener('change', evt => {
 });
 
 function previewImage() {
-    var uploader = document.querySelector('#avatarFile');
+    let uploader = document.querySelector('#avatarFile');
     if (uploader.files && uploader.files[0]) {
         document.querySelector('#avatarImage').src = window.URL.createObjectURL(uploader.files[0]);
         document.querySelector('#avatarImage').classList.remove('p-6');

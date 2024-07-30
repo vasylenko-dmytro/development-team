@@ -10,8 +10,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
+    <script type="module" th:src="@{/webjars/duetds__date-picker/dist/duet/duet.esm.js}"></script>
+    <script nomodule th:src="@{/webjars/duetds__date-picker/dist/duet/duet.js}"></script>
+    <script th:src="@{/webjars/luxon/build/global/luxon.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/webjars/duetds__date-picker/dist/duet/themes/default.css}"/>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <link rel="stylesheet" th:href="@{/css/application.css}">
+    <link rel="stylesheet" th:href="@{/css/date-picker.css}">
 </head>
 <body class="h-full">
 <div x-data="sidebarMenu()"
@@ -38,6 +43,36 @@
 <script type="text/javascript" th:src="@{/webjars/alpinejs/dist/cdn.min.js}" defer></script>
 <script th:src="@{/js/user-popup-menu.js}"></script>
 <script th:src="@{/js/sidebar-menu.js}"></script>
+<script>
+    const picker = document.querySelector('duet-date-picker');
+
+    if(picker) {
+        picker.dateAdapter = {
+            parse(value = '', createDate) {
+                try {
+                    let fromFormat = luxon.DateTime.fromFormat(value, 'yyyy-LL-dd');
+                    if (fromFormat.isValid) {
+                        return createDate(fromFormat.year, fromFormat.month, fromFormat.day);
+                    } else {
+                        console.error('Invalid date format:', value);
+                    }
+                } catch (e) {
+                    console.error('Invalid date format:', value);
+                }
+            },
+            format(date) {
+                try {
+                    const DateTime = luxon.DateTime;
+                    return DateTime.fromJSDate(date)
+                        .setLocale('[[${#strings.replace(#locale, "_", "-")}]]')
+                        .toFormat('d LLLL yyyy');
+                } catch (error) {
+                    console.error('Error formatting date:', error);
+                }
+            },
+        };
+    }
+</script>
 <th:block layout:fragment="page-scripts">
 </th:block>
 </body>
