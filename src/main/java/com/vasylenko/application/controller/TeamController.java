@@ -32,6 +32,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Team Controller.
+ * <p> Handles team management operations for the application:
+ * <ul><li>Get list of teams</li>
+ * <li>Show create team form</li>
+ * <li>Create a new team</li>
+ * <li>Show edit team form</li>
+ * <li>Edit an existing team</li>
+ * <li>Delete a team</li>
+ * <li>Get edit team member fragment</li></ul>
+ * </p>
+ */
 @Controller
 @RequestMapping("/teams")
 @Tag(name = "Team Management", description = "Operations related to team management")
@@ -45,11 +57,24 @@ public class TeamController {
         this.userService = userService;
     }
 
+    /**
+     * Initializes the data binder with custom validators.
+     *
+     * @param binder the data binder
+     */
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.setValidator(new RemoveUnusedTeamMembersValidator(binder.getValidator()));
     }
 
+
+    /**
+     * Returns a paginated list of teams.
+     *
+     * @param model the model
+     * @param pageable the pagination information
+     * @return the view name for the list of teams
+     */
     @GetMapping
     @Operation(summary = "Get list of teams", description = "Returns a paginated list of teams")
     public String index(Model model, @SortDefault.SortDefaults(@SortDefault("name")) Pageable pageable) {
@@ -57,6 +82,12 @@ public class TeamController {
         return "teams/list";
     }
 
+    /**
+     * Displays the form to create a new team.
+     *
+     * @param model the model
+     * @return the view name for the create team form
+     */
     @GetMapping("/create")
     @Secured("ROLE_ADMIN")
     @Operation(summary = "Show create team form", description = "Displays the form to create a new team")
@@ -67,6 +98,14 @@ public class TeamController {
         return "teams/edit";
     }
 
+    /**
+     * Creates a new team with the provided data.
+     *
+     * @param formData the form data
+     * @param bindingResult the binding result
+     * @param model the model
+     * @return the view name for the list of teams or the create team form if there are errors
+     */
     @PostMapping("/create")
     @Secured("ROLE_ADMIN")
     @Operation(summary = "Create a new team", description = "Creates a new team with the provided data")
@@ -78,12 +117,17 @@ public class TeamController {
             model.addAttribute("positions", TeamMemberPosition.values());
             return "teams/edit";
         }
-
         service.createTeam(formData.toParameters());
-
         return "redirect:/teams";
     }
 
+    /**
+     * Displays the form to edit an existing team.
+     *
+     * @param teamId the team ID
+     * @param model the model
+     * @return the view name for the edit team form
+     */
     @GetMapping("/{id}")
     @Operation(summary = "Show edit team form", description = "Displays the form to edit an existing team")
     public String editTeamForm(@PathVariable("id") TeamId teamId, Model model) {
@@ -96,6 +140,15 @@ public class TeamController {
         return "teams/edit";
     }
 
+    /**
+     * Updates an existing team with the provided data.
+     *
+     * @param teamId the team ID
+     * @param formData the form data
+     * @param bindingResult the binding result
+     * @param model the model
+     * @return the view name for the list of teams or the edit team form if there are errors
+     */
     @PostMapping("/{id}")
     @Secured("ROLE_ADMIN")
     @Operation(summary = "Edit an existing team", description = "Updates an existing team with the provided data")
@@ -109,12 +162,17 @@ public class TeamController {
             model.addAttribute("positions", TeamMemberPosition.values());
             return "teams/edit";
         }
-
         service.editTeam(teamId, formData.toParameters());
-
         return "redirect:/teams";
     }
 
+    /**
+     * Deletes an existing team by ID.
+     *
+     * @param teamId the team ID
+     * @param redirectAttributes the redirect attributes
+     * @return the view name for the list of teams
+     */
     @PostMapping("/{id}/delete")
     @Secured("ROLE_ADMIN")
     @Operation(summary = "Delete a team", description = "Deletes an existing team by ID")
@@ -122,14 +180,18 @@ public class TeamController {
                                RedirectAttributes redirectAttributes) {
         Team team = service.getTeam(teamId)
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
-
         service.deleteTeam(teamId);
-
         redirectAttributes.addFlashAttribute("deletedTeamName", team.getName());
-
         return "redirect:/teams";
     }
 
+    /**
+     * Returns the fragment to edit a team member.
+     *
+     * @param model the model
+     * @param index the index of the team member
+     * @return the view name for the edit team member fragment
+     */
     @GetMapping("/edit-team-member")
     @Secured("ROLE_ADMIN")
     @Operation(summary = "Get edit team member fragment", description = "Returns the fragment to edit a team member")
@@ -142,6 +204,9 @@ public class TeamController {
         return "teams/edit-team-member :: teammember-form";
     }
 
+    /**
+     * Dummy team class for team member fragment.
+     */
     private static class DummyTeamForTeamMemberFragment {
         private TeamMemberFormData[] members;
 
@@ -153,24 +218,20 @@ public class TeamController {
             this.members = members;
         }
     }
-    private static class RemoveUnusedTeamMembersValidator implements Validator {
-        private final Validator validator;
 
-        private RemoveUnusedTeamMembersValidator(Validator validator) {
-            this.validator = validator;
-        }
-
+    /**
+     * Validator to remove unused team members.
+     */
+    private record RemoveUnusedTeamMembersValidator(Validator validator) implements Validator {
         @Override
         public boolean supports(@Nonnull Class<?> clazz) {
             return validator.supports(clazz);
         }
-
         @Override
         public void validate(@Nonnull Object target, @Nonnull Errors errors) {
             if (target instanceof CreateTeamFormData formData) {
                 formData.removeEmptyTeamMemberForms();
             }
-
             validator.validate(target, errors);
         }
     }

@@ -14,17 +14,34 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * Global controller advice.
+ * <p> Provides global controller advice for the application. </p>
+ */
 @ControllerAdvice
 public class GlobalControllerAdvice {
 
     @Value("${application.version}") 
     private String version;
 
+    /**
+     * Adds the application version to the model attributes.
+     *
+     * @return the application version
+     */
     @ModelAttribute("version") 
     public String getVersion() {
         return version;
     }
 
+    /**
+     * Handles DataIntegrityViolationException and
+     * ObjectOptimisticLockingFailureException.
+     *
+     * @param request the HTTP request
+     * @param e the exception
+     * @return the model and view for the error page
+     */
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler({DataIntegrityViolationException.class, ObjectOptimisticLockingFailureException.class})
     public ModelAndView handleConflict(HttpServletRequest request, Exception e) {
@@ -33,6 +50,11 @@ public class GlobalControllerAdvice {
         return result;
     }
 
+    /**
+     * Initializes the data binder with custom editors.
+     *
+     * @param binder the data binder
+     */
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         StringTrimmerEditor stringTrimmer = new StringTrimmerEditor(false);
