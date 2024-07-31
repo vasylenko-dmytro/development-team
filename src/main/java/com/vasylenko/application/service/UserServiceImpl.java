@@ -35,7 +35,7 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
@@ -48,7 +48,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User createUser(CreateUserParameters parameters) {
-        LOGGER.debug("Creating user {} ({})", parameters.getUserName().getFullName(), parameters.getEmail().asString());
+        logger.debug("Creating user {} ({})", parameters.getUserName().getFullName(), parameters.getEmail().asString());
+
         UserId userId = repository.nextId();
         String encodedPassword = passwordEncoder.encode(parameters.getPassword());
         User user = User.createUser(userId,
@@ -59,6 +60,8 @@ public class UserServiceImpl implements UserService {
                 parameters.getEmail(),
                 parameters.getPhoneNumber());
         storeAvatarIfPresent(parameters, user);
+
+        logger.info("User {} ({}) created successfully", parameters.getUserName().getFullName(), parameters.getEmail().asString());
         return repository.save(user);
     }
 
@@ -69,7 +72,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void createAdministrator(CreateUserParameters parameters) {
-        LOGGER.debug("Creating administrator {} ({})", parameters.getUserName().getFullName(), parameters.getEmail().asString());
+        logger.debug("Creating administrator {} ({})", parameters.getUserName().getFullName(), parameters.getEmail().asString());
+
         UserId userId = repository.nextId();
         User user = User.createAdministrator(userId,
                 parameters.getUserName(),
@@ -80,6 +84,8 @@ public class UserServiceImpl implements UserService {
                 parameters.getPhoneNumber());
         storeAvatarIfPresent(parameters, user);
         repository.save(user);
+
+        logger.info("Administrator {} ({}) created successfully", parameters.getUserName().getFullName(), parameters.getEmail().asString());
     }
 
     /**
@@ -90,12 +96,17 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void editUser(UserId userId, EditUserParameters parameters) {
+        logger.debug("Editing user with ID: {}", userId);
+
         User user = repository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
         if (parameters.getVersion() != user.getVersion()) {
+            logger.warn("Version conflict for user with ID: {}", userId);
             throw new ObjectOptimisticLockingFailureException(User.class, user.getId().asString());
         }
         parameters.update(user);
+
+        logger.info("User with ID: {} edited successfully", userId);
     }
 
     /**
@@ -107,6 +118,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public Page<User> getUsers(Pageable pageable) {
+        logger.info("Retrieving paginated list of users with pagination: {}", pageable);
+
         return repository.findAll(pageable);
     }
 
@@ -119,6 +132,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public boolean userWithEmailExists(Email email) {
+        logger.info("Checking if user with email {} exists", email.asString());
+
         return repository.existsByEmail(email);
     }
 
@@ -130,6 +145,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Optional<User> getUser(UserId userId) {
+        logger.info("Retrieving user with ID: {}", userId);
+
         return repository.findById(userId);
     }
 
@@ -140,7 +157,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void deleteUser(UserId userId) {
+        logger.info("Deleting user with ID: {}", userId);
+
         repository.deleteById(userId);
+
+        logger.info("User with ID: {} deleted successfully", userId);
     }
 
     /**
@@ -148,7 +169,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void deleteAllUsers() {
+        logger.info("Deleting all users");
+
         repository.deleteAll();
+
+        logger.info("All users deleted successfully");
     }
 
     /**
@@ -158,6 +183,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public ImmutableSortedSet<UserNameAndId> getAllUsersNameAndId() {
+        logger.info("Retrieving all users' names and IDs");
+
         Iterable<User> users = repository.findAll();
         return ImmutableSortedSet.copyOf(
                 Comparator.comparing(userNameAndId ->
@@ -181,7 +208,9 @@ public class UserServiceImpl implements UserService {
         if (avatar != null) {
             try {
                 user.setAvatar(avatar.getBytes());
+                logger.info("Avatar stored for user {}", user.getId());
             } catch (IOException e) {
+                logger.error("Error storing avatar for user {}", user.getId(), e);
                 throw new UserServiceException(e);
             }
         }

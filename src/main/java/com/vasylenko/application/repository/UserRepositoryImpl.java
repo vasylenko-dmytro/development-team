@@ -3,6 +3,8 @@ package com.vasylenko.application.repository;
 import com.vasylenko.application.model.user.UserId;
 import com.vasylenko.application.util.UniqueIdGenerator;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
@@ -12,6 +14,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserRepositoryImpl {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserRepositoryImpl.class);
+
     private final UniqueIdGenerator<UUID> generator;
 
     /**
@@ -20,6 +24,9 @@ public class UserRepositoryImpl {
      * @return a new unique UserId
      */
     public UserId nextId() {
-        return new UserId(generator.getNextUniqueId());
+        logger.info("Generating next unique UserId");
+        UserId userId = new UserId(generator.getNextUniqueId());
+        logger.info("Generated UserId: {}", userId);
+        return userId;
     }
 }

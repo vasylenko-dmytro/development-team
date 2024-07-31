@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TeamServiceImpl implements TeamService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TeamServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TeamServiceImpl.class);
 
     private final TeamRepository repository;
     private final UserService userService;
@@ -47,6 +47,8 @@ public class TeamServiceImpl implements TeamService {
     @Override
     @Transactional(readOnly = true)
     public Page<TeamSummary> getTeams(Pageable pageable) {
+        logger.info("Retrieving paginated list of team summaries with pagination: {}", pageable);
+
         return repository.findAllSummary(pageable);
     }
 
@@ -60,13 +62,15 @@ public class TeamServiceImpl implements TeamService {
     public void createTeam(CreateTeamParameters parameters) {
         String name = parameters.getName();
         User lead = getUser(parameters.getLeadId());
-        LOGGER.info("Creating team {} with lead {} ({})", name, lead.getUserName().getFullName(), lead.getId());
+        logger.info("Creating team {} with lead {} ({})", name, lead.getUserName().getFullName(), lead.getId());
+
         Team team = new Team(repository.nextId(), name, lead);
         Set<TeamMemberParameters> members = parameters.getMembers();
         for (TeamMemberParameters member : members) {
             team.addMember(new TeamMember(repository.nextMemberId(), getUser(member.memberId()), member.position()));
         }
         repository.save(team);
+        logger.info("Team {} created successfully", name);
     }
 
     /**
@@ -77,9 +81,12 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public void editTeam(TeamId teamId, EditTeamParameters parameters) {
+        logger.info("Editing team with ID: {}", teamId);
+
         Team team = getTeam(teamId)
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
         if (team.getVersion() != parameters.getVersion()) {
+            logger.warn("Version conflict for team with ID: {}", teamId);
             throw new ObjectOptimisticLockingFailureException(User.class, team.getId().asString());
         }
         team.setName(parameters.getName());
@@ -88,7 +95,7 @@ public class TeamServiceImpl implements TeamService {
                 .map(teamMemberParameters -> new TeamMember(repository.nextMemberId(),
                         getUser(teamMemberParameters.memberId()), teamMemberParameters.position()))
                 .collect(Collectors.toSet()));
-
+        logger.info("Team with ID: {} edited successfully", teamId);
     }
 
     /**
@@ -99,6 +106,8 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public Optional<Team> getTeam(TeamId teamId) {
+        logger.info("Retrieving team with ID: {}", teamId);
+
         return repository.findById(teamId);
     }
 
@@ -110,6 +119,8 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public Optional<Team> getTeamWithMembers(TeamId teamId) {
+        logger.info("Retrieving team with members by ID: {}", teamId);
+
         return repository.findTeamWithMembers(teamId);
     }
 
@@ -120,7 +131,11 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public void deleteTeam(TeamId teamId) {
+        logger.info("Deleting team with ID: {}", teamId);
+
         repository.deleteById(teamId);
+
+        logger.info("Team with ID: {} deleted successfully", teamId);
     }
 
     /**
@@ -128,7 +143,11 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public void deleteAllTeams() {
+        logger.info("Deleting all teams");
+
         repository.deleteAll();
+
+        logger.info("All teams deleted successfully");
     }
 
     /**
@@ -139,6 +158,8 @@ public class TeamServiceImpl implements TeamService {
      * @throws UserNotFoundException if the user is not found
      */
     private User getUser(UserId userId) {
+        logger.info("Retrieving user with ID: {}", userId);
+
         return userService.getUser(userId).orElseThrow(() -> new UserNotFoundException(userId));
     }
 }

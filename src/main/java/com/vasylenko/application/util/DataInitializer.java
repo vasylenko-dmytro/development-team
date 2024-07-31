@@ -17,6 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 import com.vasylenko.application.service.UserService;
 import net.datafaker.Faker;
 import net.datafaker.providers.base.Name;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -34,6 +36,8 @@ import java.util.Set;
 @Component
 @Profile("init-db")
 public class DataInitializer implements CommandLineRunner {
+
+    private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
 
     private static final String[] TEAM_NAMES = new String[]{
             "Blackbirds",
@@ -59,12 +63,16 @@ public class DataInitializer implements CommandLineRunner {
      */
     @Override
     public void run(String... args) {
+        logger.info("Starting data initialization process");
+
         Set<User> generatedUsers = generateUsers();
         createAdministrator();
 
         Streams.forEachPair(generatedUsers.stream().limit(TEAM_NAMES.length),
                 Arrays.stream(TEAM_NAMES),
                 (user, teamName) -> createTeam(user, teamName, generatedUsers));
+
+        logger.info("Data initialization process completed");
     }
 
     /**
@@ -73,11 +81,16 @@ public class DataInitializer implements CommandLineRunner {
      * @return a set of generated users
      */
     private Set<User> generateUsers() {
+        logger.info("Generating random users");
+
         Set<User> users = new HashSet<>();
         for (int i = 0; i < 20; i++) {
             CreateUserParameters parameters = newRandomUserParameters();
             users.add(userService.createUser(parameters));
+
+            logger.debug("Generated user: {}", parameters.getUserName().getFullName());
         }
+        logger.info("Generated {} users", users.size());
         return users;
     }
 
@@ -85,6 +98,8 @@ public class DataInitializer implements CommandLineRunner {
      * Creates an administrator user.
      */
     private void createAdministrator() {
+        logger.info("Creating administrator user");
+
         UserName userName = randomUserName();
         CreateUserParameters parameters = new CreateUserParameters(userName,
                 userName.getFirstName(),
@@ -93,6 +108,8 @@ public class DataInitializer implements CommandLineRunner {
                 generateEmailForUserName(userName),
                 randomPhoneNumber());
         userService.createAdministrator(parameters);
+
+        logger.info("Administrator user created: {}", userName.getFullName());
     }
 
     /**
@@ -103,6 +120,8 @@ public class DataInitializer implements CommandLineRunner {
      * @param generatedUsers the set of generated users
      */
     private void createTeam(User user, String teamName, Set<User> generatedUsers) {
+        logger.info("Creating team: {} with lead: {}", teamName, user.getUserName().getFullName());
+
         Set<TeamMemberParameters> members = Set.of(
                 new TeamMemberParameters(randomUser(generatedUsers), TeamMemberPosition.BUSINESS_ANALYST),
                 new TeamMemberParameters(randomUser(generatedUsers), TeamMemberPosition.PRODUCT_OWNER),
@@ -116,6 +135,8 @@ public class DataInitializer implements CommandLineRunner {
         );
         CreateTeamParameters teamParameters = new CreateTeamParameters(teamName, user.getId(), members);
         teamService.createTeam(teamParameters);
+
+        logger.info("Team created: {}", teamName);
     }
 
     /**
@@ -130,7 +151,10 @@ public class DataInitializer implements CommandLineRunner {
         for (int i = 0; i < index; i++) {
             iter.next();
         }
-        return iter.next().getId();
+        UserId userId = iter.next().getId();
+
+        logger.debug("Selected random user: {}", userId);
+        return userId;
     }
 
     /**
@@ -145,34 +169,52 @@ public class DataInitializer implements CommandLineRunner {
         LocalDate birthday = LocalDate.ofInstant(faker.date().birthday(10, 40).toInstant(), ZoneId.systemDefault());
         Email email = generateEmailForUserName(userName);
         PhoneNumber phoneNumber = randomPhoneNumber();
-        return new CreateUserParameters(userName, userName.getFirstName(), gender, birthday, email, phoneNumber);
+        CreateUserParameters parameters = new CreateUserParameters(userName, userName.getFirstName(), gender, birthday, email, phoneNumber);
+
+        logger.debug("Generated random user parameters: {}", parameters);
+        return parameters;
     }
 
     @Nonnull
     private UserName randomUserName() {
         Name name = faker.name();
-        return new UserName(name.firstName(), name.lastName());
+        UserName userName = new UserName(name.firstName(), name.lastName());
+
+        logger.debug("Generated random user name: {}", userName);
+        return userName;
     }
 
     @Nonnull
     private PhoneNumber randomPhoneNumber() {
-        return new PhoneNumber(faker.phoneNumber().phoneNumber());
+        PhoneNumber phoneNumber = new PhoneNumber(faker.phoneNumber().phoneNumber());
+
+        logger.debug("Generated random phone number: {}", phoneNumber);
+        return phoneNumber;
     }
 
     @Nonnull
     private Email generateEmailForUserName(UserName userName) {
-        return new Email(faker.internet().emailAddress(generateEmailLocalPart(userName)));
+        Email email = new Email(faker.internet().emailAddress(generateEmailLocalPart(userName)));
+
+        logger.debug("Generated email for user name {}: {}", userName, email);
+        return email;
     }
 
     @Nonnull
     private Gender randomGender() {
-        return faker.bool().bool() ? Gender.MALE : Gender.FEMALE;
+        Gender gender = faker.bool().bool() ? Gender.MALE : Gender.FEMALE;
+
+        logger.debug("Generated random gender: {}", gender);
+        return gender;
     }
 
     @Nonnull
     private String generateEmailLocalPart(UserName userName) {
-        return String.format("%s.%s",
+        String localPart = String.format("%s.%s",
                 StringUtils.remove(userName.getFirstName().toLowerCase(), "'"),
                 StringUtils.remove(userName.getLastName().toLowerCase(), "'"));
+
+        logger.debug("Generated email local part for user name {}: {}", userName, localPart);
+        return localPart;
     }
 }

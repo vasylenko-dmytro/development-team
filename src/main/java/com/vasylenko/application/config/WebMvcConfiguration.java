@@ -1,6 +1,8 @@
 package com.vasylenko.application.config;
 
 import com.vasylenko.application.util.PhoneNumberFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -25,6 +27,8 @@ import java.util.Locale;
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
+    private static final Logger logger = LoggerFactory.getLogger(WebMvcConfiguration.class);
+
     /**
      * Configures the locale resolver with a default locale.
      *
@@ -32,6 +36,8 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
      */
     @Bean
     public LocaleResolver localeResolver() {
+        logger.info("Configuring locale resolver with default locale: {}", Locale.US);
+
         SessionLocaleResolver sessionLocaleResolver=new SessionLocaleResolver();
         sessionLocaleResolver.setDefaultLocale(Locale.US);
         return sessionLocaleResolver;
@@ -44,6 +50,8 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
      */
     @Bean
     public LocaleChangeInterceptor localeInterceptor() {
+        logger.info("Configuring locale change interceptor with parameter name 'lang'");
+
         LocaleChangeInterceptor localeInterceptor = new LocaleChangeInterceptor();
         localeInterceptor.setParamName("lang");
         return localeInterceptor;
@@ -57,6 +65,8 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     @Bean
     @RequestScope
     public ServletUriComponentsBuilder urlBuilder() {
+        logger.info("Providing URL builder scoped to the current request");
+
         return ServletUriComponentsBuilder.fromCurrentRequest();
     }
 
@@ -67,6 +77,8 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        logger.info("Adding locale change interceptor to the registry");
+
         registry.addInterceptor(localeInterceptor());
     }
 
@@ -77,6 +89,8 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
      */
     @Override
     public void addFormatters(FormatterRegistry registry) {
+        logger.info("Adding custom formatters to the registry");
+
         registry.addFormatter(new PhoneNumberFormatter());
     }
 }

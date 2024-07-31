@@ -1,6 +1,8 @@
 package com.vasylenko.application.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -21,6 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 @ControllerAdvice
 public class GlobalControllerAdvice {
 
+    private static final Logger logger = LoggerFactory.getLogger(GlobalControllerAdvice.class);
+
     @Value("${application.version}") 
     private String version;
 
@@ -31,6 +35,8 @@ public class GlobalControllerAdvice {
      */
     @ModelAttribute("version") 
     public String getVersion() {
+        logger.info("Adding application version to model attributes: {}", version);
+
         return version;
     }
 
@@ -45,6 +51,8 @@ public class GlobalControllerAdvice {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler({DataIntegrityViolationException.class, ObjectOptimisticLockingFailureException.class})
     public ModelAndView handleConflict(HttpServletRequest request, Exception e) {
+        logger.error("Handling conflict for URL: {} with exception: {}", request.getRequestURL(), e.getMessage());
+
         ModelAndView result = new ModelAndView("error/409");
         result.addObject("url", request.getRequestURL());
         return result;
@@ -57,6 +65,8 @@ public class GlobalControllerAdvice {
      */
     @InitBinder
     public void initBinder(WebDataBinder binder) {
+        logger.info("Initializing data binder with custom editors");
+
         StringTrimmerEditor stringTrimmer = new StringTrimmerEditor(false);
         binder.registerCustomEditor(String.class, stringTrimmer);
     }

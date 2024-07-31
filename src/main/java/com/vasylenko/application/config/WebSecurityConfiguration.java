@@ -1,5 +1,7 @@
 package com.vasylenko.application.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 public class WebSecurityConfiguration {
+    private static final Logger logger = LoggerFactory.getLogger(WebSecurityConfiguration.class);
+
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
 
@@ -31,6 +35,8 @@ public class WebSecurityConfiguration {
                                     UserDetailsService userDetailsService) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
+
+        logger.info("WebSecurityConfiguration initialized with PasswordEncoder and UserDetailsService");
     }
 
     /**
@@ -40,6 +46,8 @@ public class WebSecurityConfiguration {
      */
     @Bean
     public AuthenticationProvider authenticationProvider() {
+        logger.info("Configuring AuthenticationProvider with UserDetailsService and PasswordEncoder");
+
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
@@ -56,6 +64,8 @@ public class WebSecurityConfiguration {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        logger.info("Configuring SecurityFilterChain");
+
         http.csrf(httpSecurityCsrfConfigurer ->
                 httpSecurityCsrfConfigurer.ignoringRequestMatchers("/api/integration-test/**"));
         http.authorizeHttpRequests(authz -> authz
@@ -70,6 +80,7 @@ public class WebSecurityConfiguration {
                         .permitAll())
                 .logout(LogoutConfigurer::permitAll);
 
+        logger.info("SecurityFilterChain configured successfully");
         return http.build();
     }
 }

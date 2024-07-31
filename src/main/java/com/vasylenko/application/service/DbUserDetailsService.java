@@ -5,6 +5,8 @@ import com.vasylenko.application.model.user.User;
 import com.vasylenko.application.repository.UserRepository;
 import com.vasylenko.application.validation.ApplicationUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,11 +23,15 @@ import static java.lang.String.format;
 @Transactional(readOnly = true)
 public class DbUserDetailsService implements UserDetailsService {
 
+    private static final Logger logger = LoggerFactory.getLogger(DbUserDetailsService.class);
+
     private final UserRepository userRepository;
 
     @Autowired
     public DbUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
+
+        logger.info("DbUserDetailsService initialized with UserRepository");
     }
 
     /**
@@ -37,9 +43,14 @@ public class DbUserDetailsService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        logger.info("Loading user by username: {}", username);
         User user = userRepository.findByEmail(new Email(username))
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        format("User with email %s could not be found", username)));
+                .orElseThrow(() -> {
+                    logger.warn("User with email {} could not be found", username);
+                    return new UsernameNotFoundException(
+                            format("User with email %s could not be found", username));
+                });
+        logger.info("User with email {} found", username);
         return new ApplicationUserDetails(user);
     }
 }

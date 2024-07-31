@@ -2,6 +2,8 @@ package com.vasylenko.application.config;
 
 import com.vasylenko.application.util.InMemoryUniqueIdGenerator;
 import com.vasylenko.application.util.UniqueIdGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +27,8 @@ import java.util.UUID;
 @Configuration
 public class ApplicationConfiguration {
 
+	private static final Logger logger = LoggerFactory.getLogger(ApplicationConfiguration.class);
+
 	/**
 	 * Configures a template resolver for SVG files.
 	 *
@@ -32,6 +36,8 @@ public class ApplicationConfiguration {
 	 */
 	@Bean
 	public ITemplateResolver svgTemplateResolver() {
+		logger.info("Configuring SVG template resolver");
+
 		SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
 		resolver.setPrefix("classpath:/templates/svg/");
 		resolver.setSuffix(".svg");
@@ -47,6 +53,8 @@ public class ApplicationConfiguration {
 	 */
 	@Bean
 	public UniqueIdGenerator<UUID> uniqueIdGenerator() {
+		logger.info("Providing unique ID generator");
+
 		return new InMemoryUniqueIdGenerator();
 	}
 
@@ -58,6 +66,8 @@ public class ApplicationConfiguration {
 	 */
 	@Bean
 	public LocalValidatorFactoryBean localValidatorFactoryBean(MessageSource messageSource) {
+		logger.info("Configuring local validator factory bean with custom message source");
+
 		LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
 		bean.setValidationMessageSource(messageSource);
 		return bean;
@@ -70,6 +80,8 @@ public class ApplicationConfiguration {
 	 */
 	@Bean
 	public PasswordEncoder passwordEncoder() {
+		logger.info("Providing password encoder");
+
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 }

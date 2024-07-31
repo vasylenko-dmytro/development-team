@@ -14,6 +14,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.Valid;
+import lombok.Getter;
+import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
 import org.springframework.security.access.annotation.Secured;
@@ -49,12 +53,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Tag(name = "Team Management", description = "Operations related to team management")
 public class TeamController {
 
+    private static final Logger logger = LoggerFactory.getLogger(TeamController.class);
+
     private final TeamService service;
     private final UserService userService;
 
     public TeamController(TeamService service, UserService userService) {
         this.service = service;
         this.userService = userService;
+
+        logger.info("TeamController initialized with TeamService and UserService");
     }
 
     /**
@@ -64,6 +72,8 @@ public class TeamController {
      */
     @InitBinder
     public void initBinder(WebDataBinder binder) {
+        logger.info("Initializing data binder with custom validators");
+
         binder.setValidator(new RemoveUnusedTeamMembersValidator(binder.getValidator()));
     }
 
@@ -78,6 +88,8 @@ public class TeamController {
     @GetMapping
     @Operation(summary = "Get list of teams", description = "Returns a paginated list of teams")
     public String index(Model model, @SortDefault.SortDefaults(@SortDefault("name")) Pageable pageable) {
+        logger.info("Fetching list of teams with pagination");
+
         model.addAttribute("teams", service.getTeams(pageable));
         return "teams/list";
     }
@@ -92,6 +104,8 @@ public class TeamController {
     @Secured("ROLE_ADMIN")
     @Operation(summary = "Show create team form", description = "Displays the form to create a new team")
     public String createTeamForm(Model model) {
+        logger.info("Displaying create team form");
+
         model.addAttribute("team", new CreateTeamFormData());
         model.addAttribute("users", userService.getAllUsersNameAndId());
         model.addAttribute("positions", TeamMemberPosition.values());
@@ -111,6 +125,8 @@ public class TeamController {
     @Operation(summary = "Create a new team", description = "Creates a new team with the provided data")
     public String doCreateTeam(@Valid @ModelAttribute("team") CreateTeamFormData formData,
                                BindingResult bindingResult, Model model) {
+        logger.info("Creating a new team with form data: {}", formData);
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("editMode", EditMode.CREATE);
             model.addAttribute("users", userService.getAllUsersNameAndId());
@@ -118,6 +134,8 @@ public class TeamController {
             return "teams/edit";
         }
         service.createTeam(formData.toParameters());
+        logger.info("Team created successfully");
+
         return "redirect:/teams";
     }
 
@@ -131,6 +149,8 @@ public class TeamController {
     @GetMapping("/{id}")
     @Operation(summary = "Show edit team form", description = "Displays the form to edit an existing team")
     public String editTeamForm(@PathVariable("id") TeamId teamId, Model model) {
+        logger.info("Displaying edit team form for team ID: {}", teamId);
+
         Team team = service.getTeamWithMembers(teamId)
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
         model.addAttribute("team", EditTeamFormData.fromTeam(team));
@@ -156,6 +176,8 @@ public class TeamController {
                              @Valid @ModelAttribute("team") EditTeamFormData formData,
                              BindingResult bindingResult,
                              Model model) {
+        logger.info("Editing team with ID: {} and form data: {}", teamId, formData);
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("editMode", EditMode.UPDATE);
             model.addAttribute("users", userService.getAllUsersNameAndId());
@@ -163,6 +185,8 @@ public class TeamController {
             return "teams/edit";
         }
         service.editTeam(teamId, formData.toParameters());
+        logger.info("Team updated successfully");
+
         return "redirect:/teams";
     }
 
@@ -178,10 +202,14 @@ public class TeamController {
     @Operation(summary = "Delete a team", description = "Deletes an existing team by ID")
     public String doDeleteTeam(@PathVariable("id") TeamId teamId,
                                RedirectAttributes redirectAttributes) {
+        logger.info("Deleting team with ID: {}", teamId);
+
         Team team = service.getTeam(teamId)
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
         service.deleteTeam(teamId);
         redirectAttributes.addFlashAttribute("deletedTeamName", team.getName());
+
+        logger.info("Team deleted successfully");
         return "redirect:/teams";
     }
 
@@ -196,6 +224,8 @@ public class TeamController {
     @Secured("ROLE_ADMIN")
     @Operation(summary = "Get edit team member fragment", description = "Returns the fragment to edit a team member")
     public String getEditTeamMemberFragment(Model model, @RequestParam("index") int index) {
+        logger.info("Fetching edit team member fragment for index: {}", index);
+
         model.addAttribute("index", index);
         model.addAttribute("users", userService.getAllUsersNameAndId());
         model.addAttribute("positions", TeamMemberPosition.values());
@@ -207,16 +237,11 @@ public class TeamController {
     /**
      * Dummy team class for team member fragment.
      */
+    @Setter
+    @Getter
     private static class DummyTeamForTeamMemberFragment {
         private TeamMemberFormData[] members;
 
-        public TeamMemberFormData[] getMembers() {
-            return members;
-        }
-
-        public void setMembers(TeamMemberFormData[] members) {
-            this.members = members;
-        }
     }
 
     /**
