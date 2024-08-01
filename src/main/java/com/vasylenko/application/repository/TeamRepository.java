@@ -4,8 +4,6 @@ import com.vasylenko.application.model.team.Team;
 import com.vasylenko.application.model.team.TeamId;
 import com.vasylenko.application.model.team.TeamSummary;
 import com.vasylenko.application.model.team.member.TeamMemberId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;

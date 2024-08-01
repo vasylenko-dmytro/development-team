@@ -1,8 +1,8 @@
 package com.vasylenko.application.config;
 
+import com.vasylenko.application.util.CustomLogger;
 import com.vasylenko.application.util.PhoneNumberFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -27,7 +27,12 @@ import java.util.Locale;
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebMvcConfiguration.class);
+    private final CustomLogger customLogger;
+
+    @Autowired
+    public WebMvcConfiguration(CustomLogger customLogger) {
+        this.customLogger = customLogger;
+    }
 
     /**
      * Configures the locale resolver with a default locale.
@@ -36,7 +41,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
      */
     @Bean
     public LocaleResolver localeResolver() {
-        logger.info("Configuring locale resolver with default locale: {}", Locale.US);
+        customLogger.info(String.format("Configuring locale resolver with default locale: %s", Locale.US));
 
         SessionLocaleResolver sessionLocaleResolver=new SessionLocaleResolver();
         sessionLocaleResolver.setDefaultLocale(Locale.US);
@@ -50,7 +55,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
      */
     @Bean
     public LocaleChangeInterceptor localeInterceptor() {
-        logger.info("Configuring locale change interceptor with parameter name 'lang'");
+        customLogger.info("Configuring locale change interceptor with parameter name 'lang'");
 
         LocaleChangeInterceptor localeInterceptor = new LocaleChangeInterceptor();
         localeInterceptor.setParamName("lang");
@@ -65,7 +70,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     @Bean
     @RequestScope
     public ServletUriComponentsBuilder urlBuilder() {
-        logger.info("Providing URL builder scoped to the current request");
+        customLogger.info("Providing URL builder scoped to the current request");
 
         return ServletUriComponentsBuilder.fromCurrentRequest();
     }
@@ -77,7 +82,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        logger.info("Adding locale change interceptor to the registry");
+        customLogger.info("Adding locale change interceptor to the registry");
 
         registry.addInterceptor(localeInterceptor());
     }
@@ -89,7 +94,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
      */
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        logger.info("Adding custom formatters to the registry");
+        customLogger.info("Adding custom formatters to the registry");
 
         registry.addFormatter(new PhoneNumberFormatter());
     }

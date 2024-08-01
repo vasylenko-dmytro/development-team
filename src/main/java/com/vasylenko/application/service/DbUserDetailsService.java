@@ -3,10 +3,8 @@ package com.vasylenko.application.service;
 import com.vasylenko.application.model.Email;
 import com.vasylenko.application.model.user.User;
 import com.vasylenko.application.repository.UserRepository;
+import com.vasylenko.application.util.CustomLogger;
 import com.vasylenko.application.validation.ApplicationUserDetails;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,15 +21,13 @@ import static java.lang.String.format;
 @Transactional(readOnly = true)
 public class DbUserDetailsService implements UserDetailsService {
 
-    private static final Logger logger = LoggerFactory.getLogger(DbUserDetailsService.class);
-
     private final UserRepository userRepository;
+    private final CustomLogger customLogger;
 
     @Autowired
-    public DbUserDetailsService(UserRepository userRepository) {
+    public DbUserDetailsService(UserRepository userRepository, CustomLogger customLogger) {
         this.userRepository = userRepository;
-
-        logger.info("DbUserDetailsService initialized with UserRepository");
+        this.customLogger = customLogger;
     }
 
     /**
@@ -43,14 +39,14 @@ public class DbUserDetailsService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        logger.info("Loading user by username: {}", username);
+        customLogger.info(String.format("Loading user by username: %s", username));
         User user = userRepository.findByEmail(new Email(username))
                 .orElseThrow(() -> {
-                    logger.warn("User with email {} could not be found", username);
+                    customLogger.warn(String.format("User with email %s could not be found", username));
                     return new UsernameNotFoundException(
                             format("User with email %s could not be found", username));
                 });
-        logger.info("User with email {} found", username);
+        customLogger.info(String.format("User with email %s found", username));
         return new ApplicationUserDetails(user);
     }
 }

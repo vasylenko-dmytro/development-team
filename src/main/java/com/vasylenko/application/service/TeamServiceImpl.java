@@ -12,9 +12,8 @@ import com.vasylenko.application.model.team.parameters.EditTeamParameters;
 import com.vasylenko.application.model.user.User;
 import com.vasylenko.application.model.user.UserId;
 import com.vasylenko.application.repository.TeamRepository;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.vasylenko.application.util.CustomLogger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -30,13 +29,18 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class TeamServiceImpl implements TeamService {
-
-    private static final Logger logger = LoggerFactory.getLogger(TeamServiceImpl.class);
 
     private final TeamRepository repository;
     private final UserService userService;
+    private final CustomLogger customLogger;
+
+    @Autowired
+    public TeamServiceImpl(TeamRepository repository, UserService userService, CustomLogger customLogger) {
+        this.repository = repository;
+        this.userService = userService;
+        this.customLogger = customLogger;
+    }
 
     /**
      * Retrieves a paginated list of team summaries.
@@ -47,7 +51,7 @@ public class TeamServiceImpl implements TeamService {
     @Override
     @Transactional(readOnly = true)
     public Page<TeamSummary> getTeams(Pageable pageable) {
-        logger.info("Retrieving paginated list of team summaries with pagination: {}", pageable);
+        customLogger.info(String.format("Retrieving paginated list of team summaries with pagination: %s", pageable));
 
         return repository.findAllSummary(pageable);
     }
@@ -62,7 +66,7 @@ public class TeamServiceImpl implements TeamService {
     public void createTeam(CreateTeamParameters parameters) {
         String name = parameters.getName();
         User lead = getUser(parameters.getLeadId());
-        logger.info("Creating team {} with lead {} ({})", name, lead.getUserName().getFullName(), lead.getId());
+        customLogger.info(String.format("Creating team %s with lead %s (%s)", name, lead.getUserName().getFullName(), lead.getId()));
 
         Team team = new Team(repository.nextId(), name, lead);
         Set<TeamMemberParameters> members = parameters.getMembers();
@@ -70,7 +74,7 @@ public class TeamServiceImpl implements TeamService {
             team.addMember(new TeamMember(repository.nextMemberId(), getUser(member.memberId()), member.position()));
         }
         repository.save(team);
-        logger.info("Team {} created successfully", name);
+        customLogger.info(String.format("Team %s created successfully", name));
     }
 
     /**
@@ -81,12 +85,12 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public void editTeam(TeamId teamId, EditTeamParameters parameters) {
-        logger.info("Editing team with ID: {}", teamId);
+        customLogger.info(String.format("Editing team with ID: %s", teamId));
 
         Team team = getTeam(teamId)
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
         if (team.getVersion() != parameters.getVersion()) {
-            logger.warn("Version conflict for team with ID: {}", teamId);
+            customLogger.warn(String.format("Version conflict for team with ID: %s", teamId));
             throw new ObjectOptimisticLockingFailureException(User.class, team.getId().asString());
         }
         team.setName(parameters.getName());
@@ -95,7 +99,7 @@ public class TeamServiceImpl implements TeamService {
                 .map(teamMemberParameters -> new TeamMember(repository.nextMemberId(),
                         getUser(teamMemberParameters.memberId()), teamMemberParameters.position()))
                 .collect(Collectors.toSet()));
-        logger.info("Team with ID: {} edited successfully", teamId);
+        customLogger.info(String.format("Team with ID: %s edited successfully", teamId));
     }
 
     /**
@@ -106,7 +110,7 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public Optional<Team> getTeam(TeamId teamId) {
-        logger.info("Retrieving team with ID: {}", teamId);
+        customLogger.info(String.format("Retrieving team with ID: %s", teamId));
 
         return repository.findById(teamId);
     }
@@ -119,7 +123,7 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public Optional<Team> getTeamWithMembers(TeamId teamId) {
-        logger.info("Retrieving team with members by ID: {}", teamId);
+        customLogger.info(String.format("Retrieving team with members by ID: %s", teamId));
 
         return repository.findTeamWithMembers(teamId);
     }
@@ -131,11 +135,11 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public void deleteTeam(TeamId teamId) {
-        logger.info("Deleting team with ID: {}", teamId);
+        customLogger.info(String.format("Deleting team with ID: %s", teamId));
 
         repository.deleteById(teamId);
 
-        logger.info("Team with ID: {} deleted successfully", teamId);
+        customLogger.info(String.format("Team with ID: %s deleted successfully", teamId));
     }
 
     /**
@@ -143,11 +147,11 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public void deleteAllTeams() {
-        logger.info("Deleting all teams");
+        customLogger.info("Deleting all teams");
 
         repository.deleteAll();
 
-        logger.info("All teams deleted successfully");
+        customLogger.info("All teams deleted successfully");
     }
 
     /**
@@ -158,7 +162,7 @@ public class TeamServiceImpl implements TeamService {
      * @throws UserNotFoundException if the user is not found
      */
     private User getUser(UserId userId) {
-        logger.info("Retrieving user with ID: {}", userId);
+        customLogger.info(String.format("Retrieving user with ID: %s", userId));
 
         return userService.getUser(userId).orElseThrow(() -> new UserNotFoundException(userId));
     }

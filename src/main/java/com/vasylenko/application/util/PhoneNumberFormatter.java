@@ -2,8 +2,6 @@ package com.vasylenko.application.util;
 
 import com.vasylenko.application.model.PhoneNumber;
 import jakarta.annotation.Nonnull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.expression.ParseException;
 import org.springframework.format.Formatter;
 
@@ -13,8 +11,6 @@ import java.util.Locale;
  * Formatter for converting between String and PhoneNumber.
  */
 public class PhoneNumberFormatter implements Formatter<PhoneNumber> {
-
-    private static final Logger logger = LoggerFactory.getLogger(PhoneNumberFormatter.class);
 
     /**
      * Parses a String to create a PhoneNumber.
@@ -27,12 +23,8 @@ public class PhoneNumberFormatter implements Formatter<PhoneNumber> {
     @Nonnull
     @Override
     public PhoneNumber parse(@Nonnull String text, @Nonnull Locale locale) throws ParseException {
-        logger.debug("Parsing text to PhoneNumber: {}", text);
 
-        PhoneNumber phoneNumber = new PhoneNumber(text);
-
-        logger.info("Parsed PhoneNumber: {}", phoneNumber);
-        return phoneNumber;
+        return new PhoneNumber(text);
     }
 
     /**
@@ -45,11 +37,7 @@ public class PhoneNumberFormatter implements Formatter<PhoneNumber> {
     @Nonnull
     @Override
     public String print(@Nonnull PhoneNumber object, @Nonnull Locale locale) {
-        logger.debug("Printing PhoneNumber: {}", object);
 
-        String phoneNumberString = object.asString();
-
-        logger.info("Printed PhoneNumber as String: {}", phoneNumberString);
-        return phoneNumberString;
+        return object.asString();
     }
 }

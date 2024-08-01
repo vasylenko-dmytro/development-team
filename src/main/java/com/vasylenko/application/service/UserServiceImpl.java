@@ -10,9 +10,8 @@ import com.vasylenko.application.model.user.User;
 import com.vasylenko.application.model.user.UserId;
 import com.vasylenko.application.model.user.UserNameAndId;
 import com.vasylenko.application.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.vasylenko.application.util.CustomLogger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -32,13 +31,18 @@ import java.util.stream.StreamSupport;
  */
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
+    private final CustomLogger customLogger;
+
+    @Autowired
+    public UserServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder, CustomLogger customLogger) {
+        this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
+        this.customLogger = customLogger;
+    }
 
     /**
      * Creates a new user with the given parameters.
@@ -48,7 +52,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User createUser(CreateUserParameters parameters) {
-        logger.debug("Creating user {} ({})", parameters.getUserName().getFullName(), parameters.getEmail().asString());
+        customLogger.debug(String.format("Creating user %s (%s)",
+                parameters.getUserName().getFullName(), parameters.getEmail().asString()));
 
         UserId userId = repository.nextId();
         String encodedPassword = passwordEncoder.encode(parameters.getPassword());
@@ -61,7 +66,8 @@ public class UserServiceImpl implements UserService {
                 parameters.getPhoneNumber());
         storeAvatarIfPresent(parameters, user);
 
-        logger.info("User {} ({}) created successfully", parameters.getUserName().getFullName(), parameters.getEmail().asString());
+        customLogger.info(String.format("User %s (%s) created successfully",
+                parameters.getUserName().getFullName(), parameters.getEmail().asString()));
         return repository.save(user);
     }
 
@@ -72,7 +78,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void createAdministrator(CreateUserParameters parameters) {
-        logger.debug("Creating administrator {} ({})", parameters.getUserName().getFullName(), parameters.getEmail().asString());
+        customLogger.debug(String.format("Creating administrator %s (%s)",
+                parameters.getUserName().getFullName(), parameters.getEmail().asString()));
 
         UserId userId = repository.nextId();
         User user = User.createAdministrator(userId,
@@ -85,7 +92,8 @@ public class UserServiceImpl implements UserService {
         storeAvatarIfPresent(parameters, user);
         repository.save(user);
 
-        logger.info("Administrator {} ({}) created successfully", parameters.getUserName().getFullName(), parameters.getEmail().asString());
+        customLogger.info(String.format("Administrator %s (%s) created successfully",
+                parameters.getUserName().getFullName(), parameters.getEmail().asString()));
     }
 
     /**
@@ -96,17 +104,17 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void editUser(UserId userId, EditUserParameters parameters) {
-        logger.debug("Editing user with ID: {}", userId);
+        customLogger.debug(String.format("Editing user with ID: %s", userId));
 
         User user = repository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
         if (parameters.getVersion() != user.getVersion()) {
-            logger.warn("Version conflict for user with ID: {}", userId);
+            customLogger.warn(String.format("Version conflict for user with ID: %s", userId));
             throw new ObjectOptimisticLockingFailureException(User.class, user.getId().asString());
         }
         parameters.update(user);
 
-        logger.info("User with ID: {} edited successfully", userId);
+        customLogger.info(String.format("User with ID: %s edited successfully", userId));
     }
 
     /**
@@ -118,7 +126,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public Page<User> getUsers(Pageable pageable) {
-        logger.info("Retrieving paginated list of users with pagination: {}", pageable);
+        customLogger.info(String.format("Retrieving paginated list of users with pagination: %s", pageable));
 
         return repository.findAll(pageable);
     }
@@ -132,7 +140,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public boolean userWithEmailExists(Email email) {
-        logger.info("Checking if user with email {} exists", email.asString());
+        customLogger.info(String.format("Checking if user with email %s exists", email.asString()));
 
         return repository.existsByEmail(email);
     }
@@ -145,7 +153,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Optional<User> getUser(UserId userId) {
-        logger.info("Retrieving user with ID: {}", userId);
+        customLogger.info(String.format("Retrieving user with ID: %s", userId));
 
         return repository.findById(userId);
     }
@@ -157,11 +165,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void deleteUser(UserId userId) {
-        logger.info("Deleting user with ID: {}", userId);
+        customLogger.info(String.format("Deleting user with ID: %s", userId));
 
         repository.deleteById(userId);
 
-        logger.info("User with ID: {} deleted successfully", userId);
+        customLogger.info(String.format("User with ID: %s deleted successfully", userId));
     }
 
     /**
@@ -169,11 +177,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void deleteAllUsers() {
-        logger.info("Deleting all users");
+        customLogger.info("Deleting all users");
 
         repository.deleteAll();
 
-        logger.info("All users deleted successfully");
+        customLogger.info("All users deleted successfully");
     }
 
     /**
@@ -183,7 +191,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public ImmutableSortedSet<UserNameAndId> getAllUsersNameAndId() {
-        logger.info("Retrieving all users' names and IDs");
+        customLogger.info("Retrieving all users' names and IDs");
 
         Iterable<User> users = repository.findAll();
         return ImmutableSortedSet.copyOf(
@@ -208,9 +216,9 @@ public class UserServiceImpl implements UserService {
         if (avatar != null) {
             try {
                 user.setAvatar(avatar.getBytes());
-                logger.info("Avatar stored for user {}", user.getId());
+                customLogger.info(String.format("Avatar stored for user %s", user.getId()));
             } catch (IOException e) {
-                logger.error("Error storing avatar for user {}", user.getId(), e);
+                customLogger.error(String.format("Error storing avatar for user %s", user.getId()));
                 throw new UserServiceException(e);
             }
         }

@@ -1,9 +1,9 @@
 package com.vasylenko.application.config;
 
+import com.vasylenko.application.util.CustomLogger;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,7 +14,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfiguration {
 
-    private static final Logger logger = LoggerFactory.getLogger(SwaggerConfiguration.class);
+    private final CustomLogger customLogger;
+
+    @Autowired
+    public SwaggerConfiguration(CustomLogger customLogger) {
+        this.customLogger = customLogger;
+    }
 
     /**
      * Configures the OpenAPI bean with custom API documentation details.
@@ -23,7 +28,7 @@ public class SwaggerConfiguration {
      */
     @Bean
     public OpenAPI customOpenAPI() {
-        logger.info("Creating custom OpenAPI bean for API documentation");
+        customLogger.info("Creating custom OpenAPI bean for API documentation");
 
         return new OpenAPI()
                 .info(new Info()

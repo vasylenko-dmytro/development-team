@@ -1,9 +1,9 @@
 package com.vasylenko.application.controller;
 
+import com.vasylenko.application.util.CustomLogger;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +17,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Tag(name = "Root Controller", description = "Controller for handling the root endpoint")
 public class RootController {
 
-    private static final Logger logger = LoggerFactory.getLogger(RootController.class);
+    /**
+     * Custom logger for the login controller.
+     */
+    private final CustomLogger customLogger;
+
+    /**
+     * Constructor-based dependency injection for the login controller.
+     */
+    @Autowired
+    public RootController(CustomLogger customLogger) {
+        this.customLogger = customLogger;
+    }
 
     /**
      * Displays the Dashboard page.
@@ -27,7 +38,7 @@ public class RootController {
     @GetMapping
     @Operation(summary = "Dashboard Page", description = "Displays the Dashboard page")
     public String root() {
-        logger.info("Displaying the Dashboard page");
+        customLogger.info("Displaying the Dashboard page");
         return "index";
     }
 }
