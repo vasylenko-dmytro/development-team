@@ -35,8 +35,6 @@ public class GlobalControllerAdvice {
      */
     @ModelAttribute("version") 
     public String getVersion() {
-        logger.info("Adding application version to model attributes: {}", version);
-
         return version;
     }
 
