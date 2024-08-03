@@ -1,6 +1,6 @@
 package com.vasylenko.application.util;
 
-import com.vasylenko.application.service.LogService;
+import com.vasylenko.application.service.impl.LogServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -15,14 +15,14 @@ public class CustomLogger {
     /**
      * Log service for saving log entries.
      */
-    private final LogService logService;
+    private final LogServiceImpl logServiceImpl;
 
     /**
      * Constructor-based dependency injection for the custom logger.
      */
     @Autowired
-    public CustomLogger(LogService logService) {
-        this.logService = logService;
+    public CustomLogger(LogServiceImpl logServiceImpl) {
+        this.logServiceImpl = logServiceImpl;
     }
 
     /**
@@ -30,7 +30,7 @@ public class CustomLogger {
      */
     @EventListener({ApplicationReadyEvent.class})
     public void logStartup() {
-        this.logService.log("INFO", "Application started");
+        this.logServiceImpl.log("INFO", "Application started");
     }
 
     /**
@@ -38,7 +38,7 @@ public class CustomLogger {
      * @param message the log message
      */
     public void debug(String message) {
-        this.logService.log("DEBUG", message);
+        this.logServiceImpl.log("DEBUG", message);
     }
 
     /**
@@ -46,7 +46,7 @@ public class CustomLogger {
      * @param message the log message
      */
     public void info(String message) {
-        this.logService.log("INFO", message);
+        this.logServiceImpl.log("INFO", message);
     }
 
     /**
@@ -54,7 +54,7 @@ public class CustomLogger {
      * @param message the log message
      */
     public void warn(String message) {
-        this.logService.log("WARN", message);
+        this.logServiceImpl.log("WARN", message);
     }
 
     /**
@@ -62,6 +62,6 @@ public class CustomLogger {
      * @param message the log message
      */
     public void error(String message) {
-        this.logService.log("ERROR", message);
+        this.logServiceImpl.log("ERROR", message);
     }
 }

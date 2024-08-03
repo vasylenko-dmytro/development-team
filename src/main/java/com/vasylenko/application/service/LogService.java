@@ -1,41 +1,48 @@
 package com.vasylenko.application.service;
 
 import com.vasylenko.application.model.document.LogEntry;
-import com.vasylenko.application.repository.LogRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
+import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
- * Service class for logging messages.
+ * Service interface for managing logs.
  */
-@Service
-public class LogService {
-
-    /**
-     * Log repository for saving log entries.
-     */
-    private final LogRepository logRepository;
-
-    /**
-     * Constructor-based dependency injection for the log service.
-     */
-    @Autowired
-    public LogService(LogRepository logRepository) {
-        this.logRepository = logRepository;
-    }
+public interface LogService {
 
     /**
      * Logs a message with the specified log level.
+     *
      * @param level the log level
      * @param message the log message
      */
-    public void log(String level, String message) {
-        LogEntry logEntry = new LogEntry();
-        logEntry.setLevel(level);
-        logEntry.setMessage(message);
-        logEntry.setTimestamp(LocalDateTime.now());
-        this.logRepository.save(logEntry);
-    }
+    void log(String level, String message);
+
+    /**
+     * Retrieves a paginated list of logs.
+     *
+     * @param pageable the pagination information
+     * @return a page of logs
+     */
+    Page<LogEntry> getLogs(Pageable pageable);
+
+    /**
+     * Retrieves a log by their ID.
+     *
+     * @param logId the ID of the log to retrieve
+     * @return an optional containing the log if found
+     */
+    Optional<LogEntry> getLog(String logId);
+
+    /**
+     * Deletes a log by their ID.
+     *
+     * @param logId the ID of the log to delete
+     */
+    void deleteLog(String logId);
+
+    /**
+     * Deletes all logs.
+     */
+    void deleteAllLogs();
 }

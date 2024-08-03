@@ -70,8 +70,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     @Bean
     @RequestScope
     public ServletUriComponentsBuilder urlBuilder() {
-        customLogger.info("Providing URL builder scoped to the current request");
-
         return ServletUriComponentsBuilder.fromCurrentRequest();
     }
 
