@@ -8,6 +8,8 @@ Also used unit and integration tests to ensure proper functionality of the code 
 [![Java v17][shield-java]](https://openjdk.java.net/projects/jdk/17/)
 [![Spring Boot v3][shield-spring-boot]](https://spring.io/projects/spring-boot)
 [![Spring Security v6][shield-spring-security]](https://spring.io/projects/spring-security)
+[![PostgreSQL v16][shield-postgresql]](https://www.postgresql.org/docs/16/index.html)
+[![MongoDB v7][shield-mongodb]](https://docs.mongodb.com/v5.0/)
 [![Thymeleaf v3][shield-thymeleaf]](https://www.thymeleaf.org/doc/tutorials/3.1/extendingthymeleaf.html)
 
 
@@ -22,6 +24,8 @@ Also used unit and integration tests to ensure proper functionality of the code 
 - [API Documentation](#api-documentation)
   - [Swagger](#swagger)
 - [Database](#database)
+  - [PostgreSQL](#postgresql)
+  - [MongoDB](#mongodb)
   - [Flyway](#flyway)
   - [Testcontainers](#testcontainers)
   - [Generate random users](#generate-random-users)
@@ -40,9 +44,12 @@ Also used unit and integration tests to ensure proper functionality of the code 
 ## Used technologies
 * Java 17
 * Gradle 8.8
-* Spring Boot 3
-* Spring Security 6
+* Spring Boot 3.3
+* Spring Security 6.3
+* PostgreSQL 16.3
+* MongoDB 7.0
 * Swagger 3
+* Lombok 1.18
 * Thymeleaf 3
 * Tailwindcss 3.2
 * Alpinejs 3.14
@@ -121,14 +128,14 @@ Configuration in `package.json`:
 ## API Documentation
 ### Swagger
 The project uses **Swagger** to document the API.  
-To access the Swagger UI, go to the following URL:
+To access the **Swagger UI**, go to the following URL:
 ```plaintext
 http://localhost:8080/swagger-ui/index.html
 ```
-## Database
-The project uses **PostgreSQL** database.
-
-The database configuration is stored in the [application-local.properties](src/main/resources/application-local.properties) file:
+## Database:
+### PostgreSQL
+The project uses **PostgreSQL** database.  
+Database configuration is stored in the [application-local.properties](src/main/resources/application-local.properties) file:
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost/xxxxxx
 spring.datasource.driver-class-name=org.postgresql.Driver
@@ -137,10 +144,20 @@ spring.datasource.password=xxxxxx
 spring.jpa.hibernate.ddl-auto=validate
 spring.jpa.open-in-view=false
 ```
+### MongoDB
+The project uses **MongoDB** database to store application logs.  
+Database configuration is stored in the [application-mongo.properties](src/main/resources/application-mongo.properties) file:
+```properties
+spring.data.mongodb.username=xxxxxx
+spring.data.mongodb.password=xxxxxx
+spring.data.mongodb.host=localhost
+spring.data.mongodb.port=27017
+spring.data.mongodb.database=xxxxxx
+spring.data.mongodb.authentication-database=admin
+```
 ### Flyway
 Used **Flyway** to manage database migrations.  
 Folder [db/migration](src/main/resources/db/migration) contains SQL scripts for creating tables and inserting data.
-
 ### Testcontainers
 Used **Testcontainers** to run **PostgreSQL** database in a **Docker** container for testing purposes.  
 Use a special JDBC URL which will instruct **Testcontainers** to start a **Docker** image with **PostgreSQL**.  
@@ -160,7 +177,7 @@ To generate random users(names, birthdays, email addresses, ...), use the `init-
 [DataInitializer](src/main/java/com/vasylenko/application/util/DataInitializer.java) class is used to populate the database with random users.
 
 ## Docker
-To quickly spin up a PostgreSQL database, we can use [docker-compose.yaml](docker-compose.yaml) file:
+To quickly spin up a PostgreSQL and MongoDB databases, we can use [docker-compose.yaml](docker-compose.yaml) file:
 ```yaml
 version: '3.9'
 services:
@@ -168,17 +185,29 @@ services:
     image: 'postgres:16'
     shm_size: 128mb
     ports:
-    - "5432:5432"
+      - "5432:5432"
     environment:
       POSTGRES_DB: ${POSTGRES_DATABASE}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INIT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INIT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INIT_DATABASE}
 ```
 All credentials are stored in the [.env](.env) file:
 ```properties
 POSTGRES_DATABASE=xxxxxx
 POSTGRES_USER=xxxxxx
-POSTGRES_PASSWORD=xxxxxxx
+POSTGRES_PASSWORD=xxxxxx
+MONGO_INIT_USERNAME=xxxxxx
+MONGO_INIT_PASSWORD=xxxxxx
+MONGO_INIT_DATABASE=xxxxxx
 ```
 To start the database, use the following command:
 ```sh
@@ -289,5 +318,7 @@ Copyright &copy; 2024, Dmytro Vasylenko
 [shield-java]: https://img.shields.io/badge/Java-17-blue.svg
 [shield-spring-boot]: https://img.shields.io/badge/Spring%20Boot-3-blue.svg
 [shield-spring-security]: https://img.shields.io/badge/Spring%20Secyrity-6-blue.svg
+[shield-postgresql]: https://img.shields.io/badge/PostgreSQL-16-blue.svg
+[shield-mongodb]: https://img.shields.io/badge/MongoDB-7-blue.svg
 [shield-thymeleaf]: https://img.shields.io/badge/Thymeleaf-3-blue.svg
 [gravatar-dmytrovsl]: https://gravatar.com/avatar/b1aa9a589c80f793d84da34f321b9bf0
