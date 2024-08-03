@@ -1,4 +1,4 @@
-package com.vasylenko.application.service;
+package com.vasylenko.application.service.impl;
 
 import com.vasylenko.application.exception.TeamNotFoundException;
 import com.vasylenko.application.exception.UserNotFoundException;
@@ -12,6 +12,8 @@ import com.vasylenko.application.model.team.parameters.EditTeamParameters;
 import com.vasylenko.application.model.user.User;
 import com.vasylenko.application.model.user.UserId;
 import com.vasylenko.application.repository.TeamRepository;
+import com.vasylenko.application.service.TeamService;
+import com.vasylenko.application.service.UserService;
 import com.vasylenko.application.util.CustomLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

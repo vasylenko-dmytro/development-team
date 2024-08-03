@@ -1,4 +1,4 @@
-package com.vasylenko.application.service;
+package com.vasylenko.application.service.impl;
 
 import com.vasylenko.application.model.Email;
 import com.vasylenko.application.model.user.User;
