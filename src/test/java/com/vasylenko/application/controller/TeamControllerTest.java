@@ -3,6 +3,8 @@ package com.vasylenko.application.controller;
 import com.vasylenko.application.config.SpringSecurityTestConfig;
 import com.vasylenko.application.service.TeamService;
 import com.vasylenko.application.service.UserService;
+import com.vasylenko.application.util.CustomLogger;
+import com.vasylenko.application.util.EditMode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -33,6 +35,8 @@ class TeamControllerTest {
     private TeamService teamService;
     @MockBean
     private UserService userService;
+    @MockBean
+    private CustomLogger customLogger;
 
     @Test
     @WithUserDetails(USERNAME_ADMIN)
@@ -68,5 +72,17 @@ class TeamControllerTest {
     void testOpenCreateTeamFormWithoutPermission() throws Exception {
         mockMvc.perform(get("/teams/create"))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails(USERNAME_USER)
+    void testListTeams() throws Exception {
+        when(teamService.getTeams(any(Pageable.class))).thenReturn(Page.empty());
+
+        mockMvc.perform(get("/teams"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("teams/list"))
+                .andExpect(model().attributeExists("teams"));
     }
 }

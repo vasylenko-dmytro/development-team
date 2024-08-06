@@ -75,7 +75,7 @@ class UserRepositoryTest {
 
     @Test
     void testFindAllPageable() {
-        saveUsers(8);  
+        saveUsers();
 
         Sort sort = Sort.by(Sort.Direction.ASC, "userName.lastName", "userName.firstName");  
         assertThat(repository.findAll(PageRequest.of(0, 5, sort)))  
@@ -131,8 +131,8 @@ class UserRepositoryTest {
 
 
 
-    private void saveUsers(int numberOfUsers) {
-        for (int i = 0; i < numberOfUsers; i++) {
+    private void saveUsers() {
+        for (int i = 0; i < 8; i++) {
             repository.save(User.createUser(repository.nextId(),
                     new UserName(String.format("Tommy%d", i), i % 2 == 0 ? "Walton" : "Holt"),
                     "encoded-secret-pwd",

@@ -96,7 +96,7 @@ tasks.withType(ProcessResources).configureEach {
 }
 
 test {
-	enabled = false
+	enabled = true
 	useJUnitPlatform()
 
 	testLogging {
