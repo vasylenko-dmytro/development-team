@@ -23,3 +23,5 @@ build/
 .env
 .gitignore
 /gradle
+/gradlew
+/gradlew.bat
