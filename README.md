@@ -51,9 +51,10 @@ Also used unit and integration tests to ensure proper functionality of the code 
 * Swagger 3
 * Lombok 1.18
 * Thymeleaf 3
-* Tailwindcss 3.2
+* Tailwind CSS 3.2
 * Alpinejs 3.14
 * JUnit 5
+* Cypress 13.13
 * Testcontainers 1.20
 * Datafaker 2.3
 
@@ -317,7 +318,7 @@ Copyright &copy; 2024, Dmytro Vasylenko
 [shield-gplv3]: https://img.shields.io/badge/License-GPLv3-blue.svg
 [shield-java]: https://img.shields.io/badge/Java-17-blue.svg
 [shield-spring-boot]: https://img.shields.io/badge/Spring%20Boot-3-blue.svg
-[shield-spring-security]: https://img.shields.io/badge/Spring%20Secyrity-6-blue.svg
+[shield-spring-security]: https://img.shields.io/badge/Spring%20Security-6-blue.svg
 [shield-postgresql]: https://img.shields.io/badge/PostgreSQL-16-blue.svg
 [shield-mongodb]: https://img.shields.io/badge/MongoDB-7-blue.svg
 [shield-thymeleaf]: https://img.shields.io/badge/Thymeleaf-3-blue.svg
