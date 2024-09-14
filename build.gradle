@@ -57,7 +57,7 @@ dependencies {
 	// Database
 	implementation 'org.flywaydb:flyway-core:10.16.0'
 	runtimeOnly 'org.flywaydb:flyway-database-postgresql:10.16.0'
-	runtimeOnly 'org.postgresql:postgresql:42.7.3'
+	runtimeOnly 'org.postgresql:postgresql:42.7.4'
 
 	// WebJars
 	implementation 'org.webjars:webjars-locator:0.52'
