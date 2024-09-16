@@ -48,7 +48,7 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
 	// Utility Libraries
-	implementation 'com.google.guava:guava:33.2.1-jre'
+	implementation 'com.google.guava:guava:33.3.0-jre'
 	implementation 'org.apache.commons:commons-lang3:3.17.0'
 	implementation 'net.datafaker:datafaker:2.3.1'
 	compileOnly 'org.projectlombok:lombok:1.18.34'
