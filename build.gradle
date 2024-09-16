@@ -63,7 +63,7 @@ dependencies {
 	implementation 'org.webjars:webjars-locator:0.52'
 	implementation 'org.webjars.npm:alpinejs:3.14.1'
 	implementation 'org.webjars.npm:duetds__date-picker:1.4.0'
-	implementation 'org.webjars.npm:luxon:3.4.4'
+	implementation 'org.webjars.npm:luxon:3.5.0'
 
 	// Testing
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
