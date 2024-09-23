@@ -37,7 +37,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-logging'
 
 	// Spring Security
-	implementation 'org.springframework.security:spring-security-config:6.3.1'
+	implementation 'org.springframework.security:spring-security-config:6.3.3'
 	implementation 'org.springframework.security:spring-security-web:6.3.1'
 
 	// Thymeleaf
