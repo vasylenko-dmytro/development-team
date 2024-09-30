@@ -38,7 +38,7 @@ dependencies {
 
 	// Spring Security
 	implementation 'org.springframework.security:spring-security-config:6.3.3'
-	implementation 'org.springframework.security:spring-security-web:6.3.1'
+	implementation 'org.springframework.security:spring-security-web:6.3.3'
 
 	// Thymeleaf
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
